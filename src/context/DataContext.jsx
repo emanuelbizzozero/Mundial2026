@@ -10,7 +10,7 @@ const initialUsers = [
   { id: 3, name: 'Nico', lastName: 'Gómez', username: 'nico', phone: '1155667788', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-05-11' },
   { id: 4, name: 'Lucas', lastName: 'Martínez', username: 'lucas', phone: '1166778899', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-05-12' },
   { id: 5, name: 'Mati', lastName: 'López', username: 'mati', phone: '1177889900', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-05-13' },
-  { id: 6, name: 'Juan', lastName: 'Rodríguez', username: 'juan', phone: '1188990011', password: '123', role: 'usuario', status: 'PENDIENTE', registrationDate: '2026-06-01' },
+  { id: 6, name: 'Juan', lastName: 'Rodríguez', username: 'juan', phone: '1188990011', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-06-01' },
   { id: 7, name: 'Fede', lastName: 'García', username: 'fede', phone: '1199001122', password: '123', role: 'usuario', status: 'BLOQUEADO', registrationDate: '2026-05-05' },
 ];
 
