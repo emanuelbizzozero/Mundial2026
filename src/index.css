@@ -1,0 +1,245 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+  /* Green Grass Aesthetic */
+  --color-white: #FFFFFF;
+  --color-green-light: #4ADE80; /* Bright green for points */
+  --color-green-dark: #14532D; /* Deep green */
+  --color-gold: #F59E0B;
+  --color-silver: #9CA3AF;
+  --color-bronze: #B45309;
+  
+  --color-primary: var(--color-green-light);
+  --color-secondary: var(--color-white);
+  
+  --color-bg-overlay: rgba(10, 15, 60, 0.4);
+  
+  --color-text-main: var(--color-white);
+  --color-text-muted: rgba(255, 255, 255, 0.7);
+  --color-text-inverse: #111827;
+  
+  --color-success: var(--color-green-light);
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-warning: var(--color-gold);
+
+  /* Fonts */
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Glassmorphism for cards */
+  --glass-bg: rgba(15, 25, 75, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --glass-blur: blur(8px);
+
+  --transition-smooth: all 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  color: var(--color-text-main);
+  min-height: 100vh;
+  background-color: #1a237e;
+  background-image: linear-gradient(rgba(10, 15, 60, 0.3), rgba(10, 15, 60, 0.3)), url('/bg-mundial.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 12px; 
+}
+
+/* Base Elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-main);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+a:hover {
+  color: var(--color-white);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3); 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Form Elements */
+input, select, textarea {
+  font-family: var(--font-main);
+}
+
+/* Common form inputs */
+.app-input {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
+  color: var(--color-white);
+  outline: none;
+  transition: var(--transition-smooth);
+  width: 100%;
+}
+.app-input:focus {
+  border-color: var(--color-primary);
+  background-color: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.3);
+}
+
+/* Common Table */
+.table-container {
+  overflow-x: auto;
+  background-color: rgba(15, 20, 60, 0.85);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-table th {
+  border-bottom: 2px solid rgba(255,255,255,0.1); 
+  color: rgba(255,255,255,0.8);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 16px;
+  text-align: left;
+}
+.admin-table td {
+  padding: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: var(--color-white);
+}
+.admin-table tr:hover {
+  background-color: rgba(255,255,255,0.05);
+}
+
+/* Buttons */
+.btn-sporty {
+  background-color: var(--color-white); 
+  color: var(--color-green-dark); 
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  width: 100%;
+}
+.btn-sporty:hover {
+  background-color: #E5E7EB;
+  transform: translateY(-2px);
+}
+
+.btn-sporty-outline {
+  background: rgba(255,255,255,0.1);
+  color: var(--color-white);
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  width: 100%;
+}
+.btn-sporty-outline:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* Dashboard Layout */
+.dashboard-grid {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+}
+.dashboard-main {
+  flex: 7;
+}
+.dashboard-sidebar {
+  flex: 3;
+}
+@media (max-width: 900px) {
+  .dashboard-grid {
+    flex-direction: column;
+  }
+}
+
+/* Print Styles for PDF Export */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    background-image: none !important;
+  }
+  .glass-panel {
+    background: #fff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    color: #000 !important;
+  }
+  .app-input {
+    border: none !important;
+    border-bottom: 1px solid #ccc !important;
+    background: transparent !important;
+    color: #000 !important;
+  }
+  .btn-sporty, .btn-sporty-outline {
+    display: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .dashboard-sidebar {
+    display: none !important; /* Optionally hide sidebar when printing */
+  }
+  .dashboard-main {
+    flex: 10 !important;
+  }
+  h1, h2, h3, h4, span, div {
+    color: #000 !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
