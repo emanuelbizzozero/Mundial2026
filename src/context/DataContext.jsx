@@ -93,21 +93,30 @@ export const DataProvider = ({ children }) => {
       password: userData.password,
       name: userData.name,
       last_name: userData.lastName,
-      dni: userData.dni,
+      dni: userData.dni || '',
       phone: userData.phone,
-      email: userData.email,
+      email: userData.email || `${userData.username}@prodemundial.com`,
       status: 'PENDIENTE',
       role: 'user'
     };
     const { data, error } = await supabase.from('users').insert([newUser]).select();
-    if (!error && data) {
+    if (error) {
+      console.error("Supabase insert error:", error);
+      if (error.code === '23505') {
+         return { error: 'Ese nombre de usuario ya está registrado' };
+      }
+      return { error: 'Error de conexión. Inténtalo de nuevo.' };
+    }
+    if (data && data.length > 0) {
       const u = data[0];
       setUsers(prev => [...prev, {
         id: u.id, username: u.username, password: u.password, name: u.name,
         lastName: u.last_name, dni: u.dni, phone: u.phone, email: u.email,
         status: u.status, role: u.role, approvedBy: u.approved_by, registrationDate: u.registration_date
       }]);
+      return { success: true };
     }
+    return { error: 'Error desconocido' };
   };
 
   const updateUserStatus = async (userId, newStatus) => {

@@ -21,9 +21,13 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
+    let value = e.target.value;
+    if (e.target.name === 'phone') {
+      value = value.replace(/\D/g, ''); // Remove all non-digits
+    }
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: value
     });
   };
 
@@ -45,8 +49,8 @@ const Register = () => {
     setShowConfirm(true);
   };
 
-  const handleConfirm = () => {
-    registerUser({
+  const handleConfirm = async () => {
+    const result = await registerUser({
       name: formData.name,
       lastName: formData.lastName,
       username: formData.username,
@@ -54,7 +58,12 @@ const Register = () => {
       password: formData.password
     });
     
-    navigate('/login', { state: { message: 'Solicitud enviada correctamente. Esperando aprobación del administrador.' } });
+    if (result && result.error) {
+      setError(result.error);
+      setShowConfirm(false);
+    } else {
+      navigate('/login', { state: { message: 'Solicitud enviada correctamente. Esperando aprobación del administrador.' } });
+    }
   };
 
   return (
