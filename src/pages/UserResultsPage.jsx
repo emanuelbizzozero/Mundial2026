@@ -55,7 +55,7 @@ const UserResultsPage = () => {
   return (
     <div style={styles.container}>
       {/* HEADER */}
-      <header style={styles.header}>
+      <header className="responsive-header">
         <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
           <button onClick={() => navigate('/dashboard')} style={styles.backBtn}>← Volver</button>
           <h1 style={{fontSize: '20px', margin: 0}}>📊 Resultados</h1>
@@ -76,7 +76,7 @@ const UserResultsPage = () => {
 
           return (
             <div key={md.id} style={styles.accordionItem}>
-              <button onClick={() => toggleMatchday(md.id)} style={styles.accordionHeader}>
+              <button onClick={() => toggleMatchday(md.id)} className="responsive-accordion-header">
                 <div style={styles.headerLeft}>
                   <span style={styles.chevron}>{isOpen ? '▼' : '▶'}</span>
                   <span style={styles.headerTitle}>Fecha {md.number}</span>
@@ -86,7 +86,7 @@ const UserResultsPage = () => {
                     color: md.status === 'ABIERTA' ? 'var(--color-success)' : 'var(--color-danger)',
                   }}>{md.status}</span>
                 </div>
-                <div style={styles.headerRight}>
+                <div style={styles.headerRight} className="header-right-container">
                   <span style={styles.progressText}>{stats.finalized}/{stats.total} finalizados</span>
                   <div style={styles.progressBar}>
                     <div style={{...styles.progressFill, width: stats.total > 0 ? `${(stats.finalized / stats.total) * 100}%` : '0%'}}></div>
@@ -100,39 +100,39 @@ const UserResultsPage = () => {
                     <p style={{color: 'var(--color-text-muted)', padding: '15px'}}>No hay partidos en esta fecha.</p>
                   )}
 
-                  <div style={styles.matchesGrid}>
+                  <div className="responsive-matches-grid" style={{padding: '15px'}}>
                     {mdMatches.map(match => {
-                      const pred = getUserPrediction(match.id);
-                      const predResult = getPredictionResult(match, pred);
-                      const resultStyle = getResultStyle(predResult);
+                       const pred = getUserPrediction(match.id);
+                       const predResult = getPredictionResult(match, pred);
+                       const resultStyle = getResultStyle(predResult);
 
-                      return (
-                        <div key={match.id} style={{
-                          ...styles.matchCard,
-                          borderLeft: `3px solid ${resultStyle.color}`,
-                          background: resultStyle.bg,
-                        }}>
-                          {/* Meta row */}
-                          <div style={styles.matchMeta}>
-                            <span style={styles.groupTag}>{match.group}</span>
-                            <span style={styles.dateMini}>{match.date.slice(5)} {match.time}</span>
-                            <span style={{fontSize: '10px', fontWeight: 'bold', color: resultStyle.color}}>
-                              {resultStyle.icon} {resultStyle.label}
-                            </span>
-                          </div>
+                       return (
+                         <div key={match.id} style={{
+                           ...styles.matchCard,
+                           borderLeft: `3px solid ${resultStyle.color}`,
+                           background: resultStyle.bg,
+                         }}>
+                           {/* Meta row */}
+                           <div style={styles.matchMeta}>
+                             <span style={styles.groupTag}>{match.group}</span>
+                             <span style={styles.dateMini}>{match.date.slice(5)} {match.time}</span>
+                             <span style={{fontSize: '10px', fontWeight: 'bold', color: resultStyle.color}}>
+                               {resultStyle.icon} {resultStyle.label}
+                             </span>
+                           </div>
 
-                          {/* Official result */}
-                          <div style={styles.matchRow}>
-                            <span style={{...styles.team, textAlign: 'right'}}>{match.local}</span>
-                            <span style={styles.scoreBig}>
-                              {match.status === 'FINALIZADO' ? match.scoreLocal : '-'}
-                            </span>
-                            <span style={styles.vs}>vs</span>
-                            <span style={styles.scoreBig}>
-                              {match.status === 'FINALIZADO' ? match.scoreVisitante : '-'}
-                            </span>
-                            <span style={{...styles.team, textAlign: 'left'}}>{match.visitante}</span>
-                          </div>
+                           {/* Official result */}
+                           <div style={styles.matchRow}>
+                             <span style={{...styles.team, textAlign: 'right'}} className="match-row-team">{match.local}</span>
+                             <span style={styles.scoreBig}>
+                               {match.status === 'FINALIZADO' ? match.scoreLocal : '-'}
+                             </span>
+                             <span style={styles.vs}>vs</span>
+                             <span style={styles.scoreBig}>
+                               {match.status === 'FINALIZADO' ? match.scoreVisitante : '-'}
+                             </span>
+                             <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante}</span>
+                           </div>
 
                           {/* User prediction */}
                           {pred && (

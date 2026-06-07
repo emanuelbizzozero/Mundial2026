@@ -40,14 +40,14 @@ const UserRankingsPage = () => {
     return (
       <div style={styles.rankingBody}>
         {/* Top 3 cards */}
-        <div style={styles.top3Grid}>
+        <div className="responsive-top-3-grid">
           {ranked.slice(0, 3).map((user, index) => (
             <div key={user.id} style={{
               ...styles.top3Card,
               border: user.id === currentUser.id ? '2px solid var(--color-green-light)' : '1px solid rgba(255,255,255,0.08)',
             }}>
               <div style={styles.medalBig}>{getMedalEmoji(index)}</div>
-              <div style={styles.top3Name}>{user.nombre || user.usuario}</div>
+              <div style={styles.top3Name}>{user.name || user.username}</div>
               <div style={styles.top3Points}>{user.points} pts</div>
             </div>
           ))}
@@ -63,7 +63,7 @@ const UserRankingsPage = () => {
                 borderLeft: user.id === currentUser.id ? '3px solid var(--color-green-light)' : '3px solid transparent',
               }}>
                 <span style={styles.rankPos}>#{index + 4}</span>
-                <span style={styles.rankName}>{user.nombre || user.usuario} {user.apellido || ''}</span>
+                <span style={styles.rankName}>{user.name || user.username} {user.lastName || ''}</span>
                 <span style={styles.rankPts}>{user.points} pts</span>
               </div>
             ))}
@@ -86,7 +86,7 @@ const UserRankingsPage = () => {
   return (
     <div style={styles.container}>
       {/* HEADER */}
-      <header style={styles.header}>
+      <header className="responsive-header">
         <div style={{display: 'flex', alignItems: 'center', gap: '15px'}}>
           <button onClick={() => navigate('/dashboard')} style={styles.backBtn}>← Volver</button>
           <h1 style={{fontSize: '20px', margin: 0}}>🏆 Rankings</h1>

@@ -243,3 +243,131 @@ input, select, textarea {
     print-color-adjust: exact !important;
   }
 }
+
+/* ==========================================
+   RESPONSIVE DESIGN ADDITIONS (MOBILE ADJUSTMENTS)
+   ========================================== */
+
+/* Main Header */
+.responsive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 12px 20px;
+  background: rgba(20, 30, 20, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Matchday Header Title Row */
+.responsive-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Matches Grid */
+.responsive-matches-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* Accordion Header */
+.responsive-accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Rankings Top 3 Grid */
+.responsive-top-3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+/* Media Queries for Tablet/Mobile */
+@media (max-width: 768px) {
+  .responsive-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .responsive-header > div {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .responsive-header > div:nth-child(2) {
+    justify-content: flex-start;
+  }
+
+  .responsive-matches-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 580px) {
+  .responsive-title-row {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .responsive-title-row div {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .responsive-accordion-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .responsive-accordion-header > .header-right-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .responsive-top-3-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .responsive-header > div:nth-child(2) {
+    justify-content: center;
+  }
+
+  /* Make team name text adjust slightly on very small screens */
+  .match-row-team {
+    font-size: 12px !important;
+  }
+}

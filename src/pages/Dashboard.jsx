@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { useNavigate } from 'react-router-dom';
+import { jsPDF } from 'jspdf';
 
 const Dashboard = () => {
   const { currentUser, logout } = useAuth();
@@ -13,6 +14,8 @@ const Dashboard = () => {
   const [userInputs, setUserInputs] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [pdfDataUrl, setPdfDataUrl] = useState(null);
 
   // Calculate Economics
   const activeUsersCount = users.filter(u => u.status === 'ACTIVO').length;
@@ -48,28 +51,174 @@ const Dashboard = () => {
       [matchId]: { ...prev[matchId], [field]: value }
     }));
     setErrorMsg('');
+    setPdfDataUrl(null);
   };
 
-  const handleSave = () => {
+  const generatePDF = (predictionsList, dateStr) => {
+    let doc;
+    try {
+      const jsPDFClass = jsPDF.jsPDF || jsPDF.default || jsPDF;
+      doc = new jsPDFClass();
+    } catch (e) {
+      console.error("jsPDF instantiation failed, trying standard new jsPDF()", e);
+      doc = new jsPDF();
+    }
+
+    // Header Color band
+    doc.setFillColor(20, 83, 45); // Dark green
+    doc.rect(0, 0, 210, 40, 'F');
+
+    // Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text("PRODE MUNDIAL 2026", 15, 25);
+
+    // Metadata
+    doc.setFontSize(12);
+    doc.setTextColor(50, 50, 50);
+    doc.setFont("helvetica", "normal");
+    const name = currentUser.name || currentUser.username || 'Usuario';
+    doc.text(`Participante: ${name}`, 15, 52);
+    doc.text(`Fecha de la apuesta: ${dateStr}`, 15, 60);
+    doc.text(`Fecha del Prode: ${currentMatchday ? `Fecha ${currentMatchday.number}` : ''}`, 15, 68);
+
+    // Separator line
+    doc.setDrawColor(200, 200, 200);
+    doc.line(15, 75, 195, 75);
+
+    // Predictions Header
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.setTextColor(20, 83, 45);
+    doc.text("Tus Predicciones Guardadas", 15, 87);
+
+    // Table headers
+    let y = 98;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Grupo", 15, y);
+    doc.text("Partido", 45, y);
+    doc.text("Prediccion", 145, y);
+    
+    y += 5;
+    doc.line(15, y, 195, y);
+    y += 10;
+
+    // Matches
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(50, 50, 50);
+    
+    predictionsList.forEach((pred) => {
+      const match = matchdayMatches.find(m => m.id === pred.matchId);
+      if (!match) return;
+
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
+
+      doc.text(match.group || 'N/A', 15, y);
+      const matchText = `${match.local} vs ${match.visitante}`;
+      doc.text(matchText, 45, y);
+      const predictionText = `${pred.predictedLocal} - ${pred.predictedVisitante}`;
+      doc.setFont("helvetica", "bold");
+      doc.text(predictionText, 145, y);
+      doc.setFont("helvetica", "normal");
+
+      y += 9;
+    });
+
+    // Separator line
+    y += 5;
+    if (y > 280) {
+      doc.addPage();
+      y = 20;
+    }
+    doc.line(15, y, 195, y);
+    y += 10;
+
+    // Footer
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text("Comprobante oficial generado por Prode Mundial 2026. ¡Buena suerte!", 15, y);
+
+    const filename = `Apuesta_${name.replace(/\s+/g, '_')}_Fecha_${currentMatchday?.number || 'X'}.pdf`;
+
+    // Try automatic download
+    try {
+      doc.save(filename);
+    } catch (saveError) {
+      console.error("Auto-download failed:", saveError);
+    }
+
+    // Generate Blob for manual download fallback
+    try {
+      const blob = doc.output('blob');
+      const blobUrl = URL.createObjectURL(blob);
+      setPdfDataUrl(blobUrl);
+    } catch (blobError) {
+      console.error("Blob URL generation failed:", blobError);
+    }
+  };
+
+  const confirmSave = () => {
+    setShowConfirmModal(false);
     setErrorMsg('');
     setSuccessMsg('');
-    let hasEmpty = false;
-    const newPredictions = [];
+    setPdfDataUrl(null);
 
+    const newPredictions = [];
     for (const match of matchdayMatches) {
-      const inputs = userInputs[match.id];
-      if (inputs.local === '' || inputs.visitante === '') {
-        hasEmpty = true;
-        break;
-      }
+      const inputs = userInputs[match.id] || { local: '', visitante: '' };
       newPredictions.push({
         id: `${currentUser.id}-${match.id}`,
         userId: currentUser.id,
         matchdayId: currentMatchday.id,
         matchId: match.id,
-        predictedLocal: Number(inputs.local),
-        predictedVisitante: Number(inputs.visitante)
+        predictedLocal: inputs.local !== '' ? Number(inputs.local) : 0,
+        predictedVisitante: inputs.visitante !== '' ? Number(inputs.visitante) : 0
       });
+    }
+
+    try {
+      savePredictions(currentUser.id, currentMatchday.id, newPredictions);
+      
+      const now = new Date();
+      const dateStr = now.toLocaleString('es-AR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      generatePDF(newPredictions, dateStr);
+      setSuccessMsg('¡Apuesta guardada y PDF generado!');
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(`⚠️ Error al procesar apuesta: ${err.message || err}`);
+    }
+
+    setTimeout(() => {
+      setSuccessMsg('');
+    }, 15000);
+  };
+
+  const handleSave = () => {
+    setErrorMsg('');
+    setSuccessMsg('');
+    setPdfDataUrl(null);
+    let hasEmpty = false;
+
+    for (const match of matchdayMatches) {
+      const inputs = userInputs[match.id];
+      if (!inputs || inputs.local === '' || inputs.visitante === '') {
+        hasEmpty = true;
+        break;
+      }
     }
 
     if (hasEmpty) {
@@ -77,11 +226,7 @@ const Dashboard = () => {
       return;
     }
 
-    savePredictions(currentUser.id, currentMatchday.id, newPredictions);
-    setSuccessMsg('¡Apuesta guardada correctamente!');
-    // Auto-trigger print dialog
-    setTimeout(() => window.print(), 500);
-    setTimeout(() => setSuccessMsg(''), 5000);
+    setShowConfirmModal(true);
   };
 
   const handlePrint = () => window.print();
@@ -89,10 +234,10 @@ const Dashboard = () => {
   return (
     <div style={styles.container}>
       {/* HEADER */}
-      <header style={styles.header} className="no-print">
+      <header className="responsive-header no-print">
         <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
           <h1 style={styles.greeting}>⚽ Prode Mundial 2026</h1>
-          <span style={styles.userBadge}>{currentUser.nombre || currentUser.usuario}</span>
+          <span style={styles.userBadge}>{currentUser.name || currentUser.username}</span>
         </div>
         <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
           {/* Stats inline in header */}
@@ -118,14 +263,42 @@ const Dashboard = () => {
       )}
       {successMsg && (
         <div className="no-print" style={styles.alertSuccess}>
-          <span>{successMsg}</span>
-          <button onClick={handlePrint} style={styles.printBtn}>🖨️ Imprimir PDF</button>
+          <div style={{display: 'flex', flexDirection: 'column', gap: '8px', width: '100%'}}>
+            <span style={{fontWeight: 'bold'}}>{successMsg}</span>
+            <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+              {pdfDataUrl && (
+                <a 
+                  href={pdfDataUrl} 
+                  download={`Apuesta_${(currentUser.name || currentUser.username || 'Usuario').replace(/\s+/g, '_')}_Fecha_${currentMatchday?.number || 'X'}.pdf`}
+                  className="btn-sporty" 
+                  style={{
+                    width: 'auto', 
+                    padding: '8px 16px', 
+                    fontSize: '13px', 
+                    backgroundColor: 'var(--color-primary)', 
+                    color: '#000', 
+                    textDecoration: 'none', 
+                    borderRadius: '8px', 
+                    fontWeight: '800',
+                    display: 'inline-flex', 
+                    alignItems: 'center',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                  }}
+                >
+                  📥 Descargar Comprobante PDF
+                </a>
+              )}
+              <button onClick={handlePrint} style={{...styles.printBtn, padding: '8px 16px', borderRadius: '8px', fontSize: '13px'}}>
+                🖨️ Imprimir Pantalla
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
       {/* MATCHES + RANKING BUTTON */}
       <div className="glass-panel" style={{padding: '15px'}}>
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px'}}>
+        <div className="responsive-title-row">
           <h2 style={{fontSize: '18px', margin: 0}}>
             {currentMatchday ? `📅 Fecha ${currentMatchday.number} — ${matchdayMatches.length} partidos` : 'No hay fechas activas'}
           </h2>
@@ -144,7 +317,7 @@ const Dashboard = () => {
         )}
 
         {/* COMPACT GRID: 2 columns */}
-        <div style={styles.matchesGrid}>
+        <div className="responsive-matches-grid">
               {matchdayMatches.map(match => (
                 <div key={match.id} style={styles.matchCard}>
                   <div style={styles.matchMeta}>
@@ -152,7 +325,7 @@ const Dashboard = () => {
                     <span style={styles.dateMini}>{match.date.slice(5)} {match.time}</span>
                   </div>
                   <div style={styles.matchRow}>
-                    <span style={styles.team}>{match.local}</span>
+                    <span style={styles.team} className="match-row-team">{match.local}</span>
                     <input 
                       type="number" min="0"
                       style={styles.scoreInput}
@@ -168,7 +341,7 @@ const Dashboard = () => {
                       onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
                       disabled={match.status !== 'PROXIMO'}
                     />
-                    <span style={{...styles.team, textAlign: 'left'}}>{match.visitante}</span>
+                    <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante}</span>
                   </div>
                 </div>
               ))}
@@ -183,6 +356,37 @@ const Dashboard = () => {
         )}
 
       </div>
+
+      {/* CONFIRM MODAL */}
+      {showConfirmModal && (
+        <div style={styles.modalOverlay}>
+          <div className="glass-panel" style={styles.modalContent}>
+            <h3 style={styles.modalTitle}>⚽ Confirmar Apuesta</h3>
+            <p style={styles.modalText}>
+              ¿Deseas guardar tus predicciones para la <strong>Fecha {currentMatchday?.number}</strong>?
+            </p>
+            <p style={styles.modalSubtext}>
+              Se descargará un comprobante en PDF con tu apuesta y la hora actual.
+            </p>
+            <div style={styles.modalActions}>
+              <button 
+                onClick={() => setShowConfirmModal(false)} 
+                className="btn-sporty-outline" 
+                style={{flex: 1, padding: '10px'}}
+              >
+                No, Cancelar
+              </button>
+              <button 
+                onClick={confirmSave} 
+                className="btn-sporty" 
+                style={{flex: 1, padding: '10px', backgroundColor: 'var(--color-primary)', color: '#000'}}
+              >
+                Sí, Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -352,6 +556,50 @@ const styles = {
     fontWeight: '700',
     fontSize: '13px',
     transition: 'all 0.2s',
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+    backdropFilter: 'blur(4px)',
+    padding: '20px',
+  },
+  modalContent: {
+    maxWidth: '450px',
+    width: '100%',
+    padding: '25px',
+    textAlign: 'center',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '16px',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+  },
+  modalTitle: {
+    fontSize: '20px',
+    marginBottom: '15px',
+    color: '#fff',
+    margin: 0,
+  },
+  modalText: {
+    fontSize: '15px',
+    color: '#fff',
+    marginBottom: '8px',
+    marginTop: '15px',
+  },
+  modalSubtext: {
+    fontSize: '13px',
+    color: 'var(--color-text-muted)',
+    marginBottom: '25px',
+  },
+  modalActions: {
+    display: 'flex',
+    gap: '12px',
   },
 };
 
