@@ -68,19 +68,19 @@ function App() {
         } />
         
         <Route path="/dashboard" element={
-          <ProtectedRoute allowedRoles={['usuario']} allowedStatuses={['ACTIVO']}>
+          <ProtectedRoute allowedRoles={['user']} allowedStatuses={['ACTIVO']}>
             <Dashboard />
           </ProtectedRoute>
         } />
         
         <Route path="/rankings" element={
-          <ProtectedRoute allowedRoles={['usuario']} allowedStatuses={['ACTIVO']}>
+          <ProtectedRoute allowedRoles={['user']} allowedStatuses={['ACTIVO']}>
             <UserRankingsPage />
           </ProtectedRoute>
         } />
         
         <Route path="/resultados" element={
-          <ProtectedRoute allowedRoles={['usuario']} allowedStatuses={['ACTIVO']}>
+          <ProtectedRoute allowedRoles={['user']} allowedStatuses={['ACTIVO']}>
             <UserResultsPage />
           </ProtectedRoute>
         } />
