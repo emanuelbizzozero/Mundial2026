@@ -6,23 +6,18 @@ import { useData } from '../context/DataContext';
 const UserRankingsPage = () => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
-  const { users, matchdays } = useData();
+  const { users, matchdays, calculateUserPoints } = useData();
   const [expandedSection, setExpandedSection] = useState('general');
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  // Mock scoring
-  const getMockPoints = (userId, type) => {
-    const seed = type === 'general' ? userId * 7 : userId * 3;
-    return (seed % 20) + (type === 'general' ? 10 : 2);
-  };
-
   const getRankedUsers = (type) => {
+    const mdId = type.startsWith('fecha-') ? Number(type.split('-')[1]) : null;
     return users
       .filter(u => u.status === 'ACTIVO' && u.role !== 'admin')
-      .map(u => ({ ...u, points: getMockPoints(u.id, type) }))
+      .map(u => ({ ...u, points: calculateUserPoints(u.id, mdId) }))
       .sort((a, b) => b.points - a.points);
   };
 

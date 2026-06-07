@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ const Register = () => {
   });
   const [error, setError] = useState('');
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const { registerUser } = useData();
   const navigate = useNavigate();
@@ -89,11 +92,65 @@ const Register = () => {
             <div style={styles.row}>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Contraseña</label>
-                <input type="password" name="password" value={formData.password} onChange={handleChange} className="app-input" required />
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="app-input"
+                    style={{ paddingRight: '45px' }}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '4px',
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Confirmar Contraseña</label>
-                <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="app-input" required />
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="app-input"
+                    style={{ paddingRight: '45px' }}
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '4px',
+                    }}
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </div>
             </div>
             

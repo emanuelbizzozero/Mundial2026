@@ -14,7 +14,12 @@ const UserResultsPage = () => {
   };
 
   const getMatchesForMatchday = (mdId) => {
-    return matches.filter(m => m.matchdayId === mdId);
+    return matches
+      .filter(m => m.matchdayId === mdId)
+      .sort((a, b) => {
+        if (a.date !== b.date) return a.date.localeCompare(b.date);
+        return a.time.localeCompare(b.time);
+      });
   };
 
   const getUserPrediction = (matchId) => {
@@ -29,7 +34,7 @@ const UserResultsPage = () => {
 
   // Check if user got the prediction right
   const getPredictionResult = (match, pred) => {
-    if (!pred || match.status !== 'FINALIZADO' || match.scoreLocal === null) return null;
+    if (!pred || match.scoreLocal === null || match.scoreVisitante === null) return null;
     
     const realResult = Math.sign(match.scoreLocal - match.scoreVisitante); // 1=local, -1=visit, 0=draw
     const predResult = Math.sign(pred.predictedLocal - pred.predictedVisitante);
@@ -69,7 +74,7 @@ const UserResultsPage = () => {
 
       {/* ACCORDION PER MATCHDAY */}
       <div style={styles.accordionList}>
-        {matchdays.map(md => {
+        {matchdays.filter(md => md.status !== 'PENDIENTE').map(md => {
           const stats = getMatchdayStats(md.id);
           const isOpen = expandedMatchday === md.id;
           const mdMatches = getMatchesForMatchday(md.id);
@@ -125,11 +130,11 @@ const UserResultsPage = () => {
                            <div style={styles.matchRow}>
                              <span style={{...styles.team, textAlign: 'right'}} className="match-row-team">{match.local}</span>
                              <span style={styles.scoreBig}>
-                               {match.status === 'FINALIZADO' ? match.scoreLocal : '-'}
+                               {match.scoreLocal !== null ? match.scoreLocal : '-'}
                              </span>
                              <span style={styles.vs}>vs</span>
                              <span style={styles.scoreBig}>
-                               {match.status === 'FINALIZADO' ? match.scoreVisitante : '-'}
+                               {match.scoreVisitante !== null ? match.scoreVisitante : '-'}
                              </span>
                              <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante}</span>
                            </div>
@@ -156,8 +161,8 @@ const UserResultsPage = () => {
           );
         })}
 
-        {matchdays.length === 0 && (
-          <p style={{color: 'var(--color-text-muted)'}}>No hay fechas creadas aun.</p>
+        {matchdays.filter(md => md.status !== 'PENDIENTE').length === 0 && (
+          <p style={{color: 'var(--color-text-muted)'}}>No hay fechas habilitadas aun.</p>
         )}
       </div>
     </div>

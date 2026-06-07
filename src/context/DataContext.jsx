@@ -1,205 +1,217 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '../config/supabaseClient';
 
 const DataContext = createContext();
 
 export const useData = () => useContext(DataContext);
 
-const initialUsers = [
-  { id: 1, name: 'Admin', lastName: 'Sistema', username: 'admin', phone: '1122334455', password: 'admin123', role: 'admin', status: 'ACTIVO', registrationDate: '2026-01-01' },
-  { id: 2, name: 'Emanuel', lastName: 'Pérez', username: 'emanuel', phone: '1144556677', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-05-10' },
-  { id: 3, name: 'Nico', lastName: 'Gómez', username: 'nico', phone: '1155667788', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-05-11' },
-  { id: 4, name: 'Lucas', lastName: 'Martínez', username: 'lucas', phone: '1166778899', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-05-12' },
-  { id: 5, name: 'Mati', lastName: 'López', username: 'mati', phone: '1177889900', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-05-13' },
-  { id: 6, name: 'Juan', lastName: 'Rodríguez', username: 'juan', phone: '1188990011', password: '123', role: 'usuario', status: 'ACTIVO', registrationDate: '2026-06-01' },
-  { id: 7, name: 'Fede', lastName: 'García', username: 'fede', phone: '1199001122', password: '123', role: 'usuario', status: 'BLOQUEADO', registrationDate: '2026-05-05' },
-];
-
-const initialEconomics = {
-  entryFee: 30000,
-  totalMatchdays: 7,
-  matchesPerMatchday: 10
-};
-
-const initialMatchdays = [
-  { id: 1, number: 1, status: 'ABIERTA' },
-  { id: 2, number: 2, status: 'ABIERTA' },
-  { id: 3, number: 3, status: 'ABIERTA' },
-];
-
-const initialMatches = [
-  // --- FECHA 1: Jornada 1 de Fase de Grupos ---
-  // Grupo A
-  { id: 1, matchdayId: 1, local: 'Mexico', visitante: 'Sudafrica', date: '2026-06-11', time: '13:00', stadium: 'Estadio Azteca', group: 'Grupo A', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 2, matchdayId: 1, local: 'Corea del Sur', visitante: 'Chequia', date: '2026-06-11', time: '16:00', stadium: 'Estadio Akron', group: 'Grupo A', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo B
-  { id: 3, matchdayId: 1, local: 'Canada', visitante: 'Italia', date: '2026-06-12', time: '12:00', stadium: 'BMO Field', group: 'Grupo B', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 4, matchdayId: 1, local: 'Qatar', visitante: 'Suiza', date: '2026-06-12', time: '15:00', stadium: 'BC Place', group: 'Grupo B', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo C
-  { id: 5, matchdayId: 1, local: 'Brasil', visitante: 'Marruecos', date: '2026-06-13', time: '13:00', stadium: 'Gillette Stadium', group: 'Grupo C', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 6, matchdayId: 1, local: 'Haiti', visitante: 'Escocia', date: '2026-06-13', time: '16:00', stadium: 'Levis Stadium', group: 'Grupo C', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo D
-  { id: 7, matchdayId: 1, local: 'Estados Unidos', visitante: 'Paraguay', date: '2026-06-12', time: '18:00', stadium: 'SoFi Stadium', group: 'Grupo D', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 8, matchdayId: 1, local: 'Australia', visitante: 'Turquia', date: '2026-06-13', time: '19:00', stadium: 'Lumen Field', group: 'Grupo D', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo E
-  { id: 9, matchdayId: 1, local: 'Alemania', visitante: 'Curazao', date: '2026-06-14', time: '12:00', stadium: 'Lincoln Financial Field', group: 'Grupo E', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 10, matchdayId: 1, local: 'Costa de Marfil', visitante: 'Ecuador', date: '2026-06-14', time: '15:00', stadium: 'NRG Stadium', group: 'Grupo E', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo F
-  { id: 11, matchdayId: 1, local: 'Paises Bajos', visitante: 'Japon', date: '2026-06-14', time: '18:00', stadium: 'AT&T Stadium', group: 'Grupo F', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 12, matchdayId: 1, local: 'Polonia', visitante: 'Tunez', date: '2026-06-14', time: '21:00', stadium: 'Estadio BBVA', group: 'Grupo F', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo G
-  { id: 13, matchdayId: 1, local: 'Belgica', visitante: 'Egipto', date: '2026-06-15', time: '13:00', stadium: 'Mercedes-Benz Stadium', group: 'Grupo G', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 14, matchdayId: 1, local: 'Iran', visitante: 'Nueva Zelanda', date: '2026-06-15', time: '16:00', stadium: 'Hard Rock Stadium', group: 'Grupo G', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo H
-  { id: 15, matchdayId: 1, local: 'Espana', visitante: 'Cabo Verde', date: '2026-06-15', time: '19:00', stadium: 'MetLife Stadium', group: 'Grupo H', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 16, matchdayId: 1, local: 'Arabia Saudita', visitante: 'Uruguay', date: '2026-06-15', time: '22:00', stadium: 'Arrowhead Stadium', group: 'Grupo H', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo I
-  { id: 17, matchdayId: 1, local: 'Francia', visitante: 'Senegal', date: '2026-06-16', time: '13:00', stadium: 'Lincoln Financial Field', group: 'Grupo I', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 18, matchdayId: 1, local: 'Bolivia', visitante: 'Noruega', date: '2026-06-16', time: '16:00', stadium: 'NRG Stadium', group: 'Grupo I', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo J
-  { id: 19, matchdayId: 1, local: 'Argentina', visitante: 'Argelia', date: '2026-06-16', time: '19:00', stadium: 'Hard Rock Stadium', group: 'Grupo J', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 20, matchdayId: 1, local: 'Austria', visitante: 'Jordania', date: '2026-06-16', time: '22:00', stadium: 'Mercedes-Benz Stadium', group: 'Grupo J', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo K
-  { id: 21, matchdayId: 1, local: 'Portugal', visitante: 'Jamaica', date: '2026-06-17', time: '13:00', stadium: 'Gillette Stadium', group: 'Grupo K', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 22, matchdayId: 1, local: 'Uzbekistan', visitante: 'Colombia', date: '2026-06-17', time: '16:00', stadium: 'Levis Stadium', group: 'Grupo K', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  // Grupo L
-  { id: 23, matchdayId: 1, local: 'Inglaterra', visitante: 'Croacia', date: '2026-06-17', time: '19:00', stadium: 'MetLife Stadium', group: 'Grupo L', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-  { id: 24, matchdayId: 1, local: 'Ghana', visitante: 'Panama', date: '2026-06-17', time: '22:00', stadium: 'Arrowhead Stadium', group: 'Grupo L', status: 'PROXIMO', scoreLocal: null, scoreVisitante: null },
-];
-
 export const DataProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
-  const [economics, setEconomics] = useState(initialEconomics);
+  const [economics, setEconomics] = useState({ entryFee: 0, totalMatchdays: 0 });
   const [matchdays, setMatchdays] = useState([]);
   const [matches, setMatches] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [predictions, setPredictions] = useState([]);
+  const [loadingData, setLoadingData] = useState(true);
+
+  const fetchAllData = async () => {
+    try {
+      const [
+        { data: usersData },
+        { data: ecoData },
+        { data: mdaysData },
+        { data: matchesData },
+        { data: predsData },
+        { data: logsData }
+      ] = await Promise.all([
+        supabase.from('users').select('*'),
+        supabase.from('economics').select('*'),
+        supabase.from('matchdays').select('*').order('id', { ascending: true }),
+        supabase.from('matches').select('*').order('id', { ascending: true }),
+        supabase.from('predictions').select('*'),
+        supabase.from('audit_logs').select('*').order('log_date', { ascending: false })
+      ]);
+
+      if (usersData) {
+        setUsers(usersData.map(u => ({
+          id: u.id, username: u.username, password: u.password, name: u.name,
+          lastName: u.last_name, dni: u.dni, phone: u.phone, email: u.email,
+          status: u.status, role: u.role, approvedBy: u.approved_by, registrationDate: u.registration_date
+        })));
+      }
+      
+      if (ecoData && ecoData[0]) {
+        setEconomics({ entryFee: ecoData[0].entry_fee, totalMatchdays: ecoData[0].total_matchdays });
+      }
+
+      if (mdaysData) setMatchdays(mdaysData);
+
+      if (matchesData) {
+        setMatches(matchesData.map(m => ({
+          id: m.id, matchdayId: m.matchday_id, local: m.local_team, visitante: m.visitante_team,
+          date: m.match_date, time: m.match_time, stadium: m.stadium, group: m.group_name,
+          status: m.status, scoreLocal: m.score_local, scoreVisitante: m.score_visitante
+        })));
+      }
+
+      if (predsData) {
+        setPredictions(predsData.map(p => ({
+          id: p.id, userId: p.user_id, matchdayId: p.matchday_id, matchId: p.match_id,
+          predictedLocal: p.predicted_local, predictedVisitante: p.predicted_visitante
+        })));
+      }
+
+      if (logsData) {
+        setAuditLogs(logsData.map(l => ({
+          id: l.id, date: l.log_date, action: l.action, detail: l.detail
+        })));
+      }
+    } catch (error) {
+      console.error('Error fetching from Supabase:', error);
+    } finally {
+      setLoadingData(false);
+    }
+  };
 
   useEffect(() => {
-    // Initialize mock data in local storage if not exists
-    const localUsers = localStorage.getItem('prode_users');
-    if (!localUsers) {
-      localStorage.setItem('prode_users', JSON.stringify(initialUsers));
-      setUsers(initialUsers);
-    } else {
-      setUsers(JSON.parse(localUsers));
-    }
-
-    const localEconomics = localStorage.getItem('prode_economics');
-    if (!localEconomics) {
-      localStorage.setItem('prode_economics', JSON.stringify(initialEconomics));
-    } else {
-      setEconomics(JSON.parse(localEconomics));
-    }
-
-    const localMatchdays = localStorage.getItem('prode_matchdays');
-    if (!localMatchdays) {
-      localStorage.setItem('prode_matchdays', JSON.stringify(initialMatchdays));
-      setMatchdays(initialMatchdays);
-    } else {
-      setMatchdays(JSON.parse(localMatchdays));
-    }
-
-    const localMatches = localStorage.getItem('prode_matches');
-    if (!localMatches) {
-      localStorage.setItem('prode_matches', JSON.stringify(initialMatches));
-      setMatches(initialMatches);
-    } else {
-      setMatches(JSON.parse(localMatches));
-    }
-
-    const localAudit = localStorage.getItem('prode_audit');
-    if (!localAudit) {
-      localStorage.setItem('prode_audit', JSON.stringify([]));
-      setAuditLogs([]);
-    } else {
-      setAuditLogs(JSON.parse(localAudit));
-    }
-
-    const localPredictions = localStorage.getItem('prode_predictions');
-    if (!localPredictions) {
-      localStorage.setItem('prode_predictions', JSON.stringify([]));
-      setPredictions([]);
-    } else {
-      setPredictions(JSON.parse(localPredictions));
-    }
+    fetchAllData();
   }, []);
 
-  const addLog = (action, details) => {
+  const addLog = async (action, detail) => {
     const newLog = {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
+      id: Date.now().toString(),
       action,
-      details,
-      user: 'admin' // In a real app, this is the current user
+      detail
     };
-    const updated = [newLog, ...auditLogs];
-    setAuditLogs(updated);
-    localStorage.setItem('prode_audit', JSON.stringify(updated));
+    await supabase.from('audit_logs').insert([newLog]);
+    setAuditLogs(prev => [{ ...newLog, date: new Date().toISOString() }, ...prev]);
   };
 
-  const registerUser = (userData) => {
+  const registerUser = async (userData) => {
     const newUser = {
-      ...userData,
-      id: Date.now(),
-      role: 'usuario',
+      username: userData.username,
+      password: userData.password,
+      name: userData.name,
+      last_name: userData.lastName,
+      dni: userData.dni,
+      phone: userData.phone,
+      email: userData.email,
       status: 'PENDIENTE',
-      registrationDate: new Date().toISOString().split('T')[0]
+      role: 'user'
     };
-    const updatedUsers = [...users, newUser];
-    setUsers(updatedUsers);
-    localStorage.setItem('prode_users', JSON.stringify(updatedUsers));
+    const { data, error } = await supabase.from('users').insert([newUser]).select();
+    if (!error && data) {
+      const u = data[0];
+      setUsers(prev => [...prev, {
+        id: u.id, username: u.username, password: u.password, name: u.name,
+        lastName: u.last_name, dni: u.dni, phone: u.phone, email: u.email,
+        status: u.status, role: u.role, approvedBy: u.approved_by, registrationDate: u.registration_date
+      }]);
+    }
   };
 
-  const updateUserStatus = (userId, newStatus) => {
-    const updatedUsers = users.map(u => u.id === userId ? { ...u, status: newStatus } : u);
-    setUsers(updatedUsers);
-    localStorage.setItem('prode_users', JSON.stringify(updatedUsers));
+  const updateUserStatus = async (userId, newStatus) => {
+    await supabase.from('users').update({ status: newStatus }).eq('id', userId);
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: newStatus } : u));
   };
 
-  const addMatchday = (matchday) => {
-    const updated = [...matchdays, { ...matchday, id: Date.now() }];
-    setMatchdays(updated);
-    localStorage.setItem('prode_matchdays', JSON.stringify(updated));
+  const addMatchday = async (matchday) => {
+    const newId = Date.now();
+    await supabase.from('matchdays').insert([{ id: newId, number: matchday.number, status: matchday.status, name: matchday.name }]);
+    setMatchdays(prev => [...prev, { ...matchday, id: newId }]);
   };
 
-  const updateMatchday = (id, data) => {
-    const updated = matchdays.map(m => m.id === id ? { ...m, ...data } : m);
-    setMatchdays(updated);
-    localStorage.setItem('prode_matchdays', JSON.stringify(updated));
+  const updateMatchday = async (id, data) => {
+    await supabase.from('matchdays').update({ status: data.status, name: data.name }).eq('id', id);
+    setMatchdays(prev => prev.map(m => m.id === id ? { ...m, ...data } : m));
   };
 
-  const deleteMatchday = (id) => {
-    const updated = matchdays.filter(m => m.id !== id);
-    setMatchdays(updated);
-    localStorage.setItem('prode_matchdays', JSON.stringify(updated));
+  const deleteMatchday = async (id) => {
+    await supabase.from('matchdays').delete().eq('id', id);
+    setMatchdays(prev => prev.filter(m => m.id !== id));
   };
 
-  const addMatch = (match) => {
-    const updated = [...matches, { ...match, id: Date.now() }];
-    setMatches(updated);
-    localStorage.setItem('prode_matches', JSON.stringify(updated));
+  const addMatch = async (match) => {
+    const newId = Date.now();
+    const insertData = {
+      id: newId,
+      matchday_id: match.matchdayId,
+      local_team: match.local,
+      visitante_team: match.visitante,
+      match_date: match.date,
+      match_time: match.time,
+      stadium: match.stadium,
+      group_name: match.group,
+      status: match.status,
+      score_local: match.scoreLocal,
+      score_visitante: match.scoreVisitante
+    };
+    await supabase.from('matches').insert([insertData]);
+    setMatches(prev => [...prev, { ...match, id: newId }]);
   };
 
-  const updateMatch = (id, data) => {
-    const updated = matches.map(m => m.id === id ? { ...m, ...data } : m);
-    setMatches(updated);
-    localStorage.setItem('prode_matches', JSON.stringify(updated));
+  const updateMatch = async (id, data) => {
+    const updatePayload = {};
+    if (data.status !== undefined) updatePayload.status = data.status;
+    if (data.scoreLocal !== undefined) updatePayload.score_local = data.scoreLocal;
+    if (data.scoreVisitante !== undefined) updatePayload.score_visitante = data.scoreVisitante;
+
+    await supabase.from('matches').update(updatePayload).eq('id', id);
+    setMatches(prev => prev.map(m => m.id === id ? { ...m, ...data } : m));
   };
 
-  const deleteMatch = (id) => {
-    const updated = matches.filter(m => m.id !== id);
-    setMatches(updated);
-    localStorage.setItem('prode_matches', JSON.stringify(updated));
+  const deleteMatch = async (id) => {
+    await supabase.from('matches').delete().eq('id', id);
+    setMatches(prev => prev.filter(m => m.id !== id));
   };
 
-  const savePredictions = (userId, matchdayId, newPredictions) => {
-    // Remove existing predictions for this user and this matchday
-    const otherPredictions = predictions.filter(
-      p => !(p.userId === userId && p.matchdayId === matchdayId)
-    );
-    const updated = [...otherPredictions, ...newPredictions];
-    setPredictions(updated);
-    localStorage.setItem('prode_predictions', JSON.stringify(updated));
+  const savePredictions = async (userId, matchdayId, newPredictions) => {
+    await supabase.from('predictions')
+      .delete()
+      .eq('user_id', userId)
+      .eq('matchday_id', matchdayId);
+
+    const inserts = newPredictions.map(p => ({
+      id: Date.now().toString() + Math.random().toString().slice(2, 6),
+      user_id: p.userId,
+      matchday_id: p.matchdayId,
+      match_id: p.matchId,
+      predicted_local: p.predictedLocal,
+      predicted_visitante: p.predictedVisitante
+    }));
+
+    if (inserts.length > 0) {
+      await supabase.from('predictions').insert(inserts);
+    }
+    
+    setPredictions(prev => {
+      const otherPredictions = prev.filter(p => !(p.userId === userId && p.matchdayId === matchdayId));
+      const newPredsMapped = inserts.map(ins => ({
+        id: ins.id, userId: ins.user_id, matchdayId: ins.matchday_id, matchId: ins.match_id,
+        predictedLocal: ins.predicted_local, predictedVisitante: ins.predicted_visitante
+      }));
+      return [...otherPredictions, ...newPredsMapped];
+    });
+  };
+
+  const calculateUserPoints = (userId, matchdayId = null) => {
+    let points = 0;
+    const userPreds = predictions.filter(p => p.userId === userId && (matchdayId === null || p.matchdayId === matchdayId));
+    
+    userPreds.forEach(pred => {
+      const match = matches.find(m => m.id === pred.matchId);
+      if (match && match.scoreLocal !== null && match.scoreVisitante !== null) {
+        const realResult = Math.sign(match.scoreLocal - match.scoreVisitante);
+        const predResult = Math.sign(pred.predictedLocal - pred.predictedVisitante);
+        
+        if (pred.predictedLocal === match.scoreLocal && pred.predictedVisitante === match.scoreVisitante) {
+          points += 3;
+        } else if (realResult === predResult) {
+          points += 1;
+        }
+      }
+    });
+    return points;
   };
 
   const value = {
@@ -207,7 +219,10 @@ export const DataProvider = ({ children }) => {
     registerUser,
     updateUserStatus,
     economics,
-    setEconomics,
+    setEconomics: async (eco) => {
+       await supabase.from('economics').update({ entry_fee: eco.entryFee, total_matchdays: eco.totalMatchdays }).eq('id', 1);
+       setEconomics(eco);
+    },
     matchdays,
     addMatchday,
     updateMatchday,
@@ -219,8 +234,19 @@ export const DataProvider = ({ children }) => {
     auditLogs,
     addLog,
     predictions,
-    savePredictions
+    savePredictions,
+    calculateUserPoints,
   };
+
+  if (loadingData) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--color-bg)', color: '#fff' }}>
+        <div className="spinner" style={{ width: '40px', height: '40px', border: '4px solid rgba(255,255,255,0.1)', borderTopColor: 'var(--color-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+        <p style={{ marginTop: '20px', fontWeight: 'bold' }}>Conectando a base de datos segura...</p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
 
   return (
     <DataContext.Provider value={value}>

@@ -5,6 +5,8 @@ const AdminResults = () => {
   const { matchdays, matches, updateMatch, addLog } = useData();
   const [expandedMatchday, setExpandedMatchday] = useState(null);
   const [savedMsg, setSavedMsg] = useState('');
+  const [filterText, setFilterText] = useState('');
+  const [filterGroup, setFilterGroup] = useState('ALL');
 
   const toggleMatchday = (mdId) => {
     setExpandedMatchday(expandedMatchday === mdId ? null : mdId);
@@ -12,7 +14,23 @@ const AdminResults = () => {
   };
 
   const getMatchesForMatchday = (mdId) => {
-    return matches.filter(m => m.matchdayId === mdId);
+    let filtered = matches.filter(m => m.matchdayId === mdId);
+    
+    if (filterText) {
+      filtered = filtered.filter(m => 
+        m.local.toLowerCase().includes(filterText.toLowerCase()) || 
+        m.visitante.toLowerCase().includes(filterText.toLowerCase())
+      );
+    }
+    
+    if (filterGroup !== 'ALL') {
+      filtered = filtered.filter(m => m.group && m.group.includes(filterGroup));
+    }
+    
+    return filtered.sort((a, b) => {
+      if (a.date !== b.date) return a.date.localeCompare(b.date);
+      return a.time.localeCompare(b.time);
+    });
   };
 
   const handleScoreChange = (matchId, field, value) => {
@@ -48,12 +66,61 @@ const AdminResults = () => {
     return { total: mdMatches.length, finalized };
   };
 
+  const syncWithAPI = (mdId) => {
+    // Fake API sync logic
+    setSavedMsg('Sincronizando con API deportiva...');
+    setTimeout(() => {
+      const mdMatches = getMatchesForMatchday(mdId);
+      mdMatches.forEach(m => {
+        // En una app real, aqui hariamos fetch('https://api-football...') y validariamos la fecha y hora
+        if (m.status !== 'FINALIZADO') {
+          const randomLocal = Math.floor(Math.random() * 4);
+          const randomVisit = Math.floor(Math.random() * 4);
+          updateMatch(m.id, { scoreLocal: randomLocal, scoreVisitante: randomVisit });
+        }
+      });
+      setSavedMsg('Sincronización completada. Los goles se han cargado automáticamente.');
+      setTimeout(() => setSavedMsg(''), 6000);
+    }, 1500);
+  };
+
   return (
     <div>
       <h1 style={styles.pageTitle}>Carga de Resultados</h1>
-      <p style={{color: 'var(--color-text-muted)', marginBottom: '20px', fontSize: '14px'}}>
+      <p style={{color: 'var(--color-text-muted)', marginBottom: '15px', fontSize: '14px'}}>
         Selecciona una fecha para desplegar los partidos y cargar los resultados.
       </p>
+
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '15px', flexWrap: 'wrap' }}>
+        <input 
+          type="text" 
+          placeholder="Buscar equipo..." 
+          value={filterText}
+          onChange={e => setFilterText(e.target.value)}
+          className="app-input"
+          style={{ flex: '1', minWidth: '200px' }}
+        />
+        <select 
+          value={filterGroup} 
+          onChange={e => setFilterGroup(e.target.value)}
+          className="app-input"
+          style={{ width: '150px' }}
+        >
+          <option value="ALL">Todos</option>
+          <option value="Grupo A">Grupo A</option>
+          <option value="Grupo B">Grupo B</option>
+          <option value="Grupo C">Grupo C</option>
+          <option value="Grupo D">Grupo D</option>
+          <option value="Grupo E">Grupo E</option>
+          <option value="Grupo F">Grupo F</option>
+          <option value="Grupo G">Grupo G</option>
+          <option value="Grupo H">Grupo H</option>
+          <option value="Grupo I">Grupo I</option>
+          <option value="Grupo J">Grupo J</option>
+          <option value="Grupo K">Grupo K</option>
+          <option value="Grupo L">Grupo L</option>
+        </select>
+      </div>
 
       {savedMsg && (
         <div style={styles.savedAlert}>{savedMsg}</div>
@@ -91,6 +158,13 @@ const AdminResults = () => {
                 <div style={styles.accordionBody}>
                   {mdMatches.length === 0 && (
                     <p style={{color: 'var(--color-text-muted)', padding: '15px'}}>No hay partidos en esta fecha.</p>
+                  )}
+                  {mdMatches.length > 0 && (
+                    <div style={{padding: '15px 15px 0 15px'}}>
+                      <button onClick={() => syncWithAPI(md.id)} className="btn-sporty-outline" style={{width: 'auto', padding: '8px 15px', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#fff', borderColor: 'rgba(255,255,255,0.4)'}}>
+                        <span>🔄</span> Auto-completar desde API
+                      </button>
+                    </div>
                   )}
 
                   <div style={styles.matchesGrid}>

@@ -16,6 +16,8 @@ const Dashboard = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pdfDataUrl, setPdfDataUrl] = useState(null);
+  const [filterText, setFilterText] = useState('');
+  const [filterGroup, setFilterGroup] = useState('ALL');
 
   // Calculate Economics
   const activeUsersCount = users.filter(u => u.status === 'ACTIVO').length;
@@ -27,7 +29,12 @@ const Dashboard = () => {
     const activeMd = matchdays.find(m => m.status === 'ABIERTA');
     if (activeMd) {
       setCurrentMatchday(activeMd);
-      const mMatches = matches.filter(m => m.matchdayId === activeMd.id);
+      const mMatches = matches
+        .filter(m => m.matchdayId === activeMd.id)
+        .sort((a, b) => {
+          if (a.date !== b.date) return a.date.localeCompare(b.date);
+          return a.time.localeCompare(b.time);
+        });
       setMatchdayMatches(mMatches);
 
       const existingPreds = predictions.filter(
@@ -316,9 +323,51 @@ const Dashboard = () => {
           <p style={{color: 'var(--color-text-muted)'}}>El administrador aun no ha habilitado ninguna fecha.</p>
         )}
 
+        {currentMatchday && (
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '15px', marginTop: '10px', flexWrap: 'wrap' }}>
+            <input 
+              type="text" 
+              placeholder="Buscar equipo..." 
+              value={filterText}
+              onChange={e => setFilterText(e.target.value)}
+              className="app-input"
+              style={{ flex: '1', minWidth: '200px' }}
+            />
+            <select 
+              value={filterGroup} 
+              onChange={e => setFilterGroup(e.target.value)}
+              className="app-input"
+              style={{ width: '150px' }}
+            >
+              <option value="ALL">Todos</option>
+              <option value="Grupo A">Grupo A</option>
+              <option value="Grupo B">Grupo B</option>
+              <option value="Grupo C">Grupo C</option>
+              <option value="Grupo D">Grupo D</option>
+              <option value="Grupo E">Grupo E</option>
+              <option value="Grupo F">Grupo F</option>
+              <option value="Grupo G">Grupo G</option>
+              <option value="Grupo H">Grupo H</option>
+              <option value="Grupo I">Grupo I</option>
+              <option value="Grupo J">Grupo J</option>
+              <option value="Grupo K">Grupo K</option>
+              <option value="Grupo L">Grupo L</option>
+            </select>
+          </div>
+        )}
+
         {/* COMPACT GRID: 2 columns */}
         <div className="responsive-matches-grid">
-              {matchdayMatches.map(match => (
+              {matchdayMatches
+                .filter(m => {
+                  if (filterGroup !== 'ALL' && !m.group.includes(filterGroup)) return false;
+                  if (filterText) {
+                    const txt = filterText.toLowerCase();
+                    return m.local.toLowerCase().includes(txt) || m.visitante.toLowerCase().includes(txt);
+                  }
+                  return true;
+                })
+                .map(match => (
                 <div key={match.id} style={styles.matchCard}>
                   <div style={styles.matchMeta}>
                     <span style={styles.groupTag}>{match.group}</span>

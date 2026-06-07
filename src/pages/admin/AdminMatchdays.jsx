@@ -58,6 +58,7 @@ const AdminMatchdays = () => {
               value={formData.status} 
               onChange={(e) => setFormData({...formData, status: e.target.value})}
             >
+              <option value="PENDIENTE">Pendiente (Oculta)</option>
               <option value="ABIERTA">Abierta para apuestas</option>
               <option value="CERRADA">Cerrada</option>
             </select>
@@ -93,8 +94,8 @@ const AdminMatchdays = () => {
                 <td>
                   <span style={{
                     ...styles.badge, 
-                    backgroundColor: matchday.status === 'ABIERTA' ? 'rgba(0,155,58,0.2)' : 'rgba(227,0,43,0.2)',
-                    color: matchday.status === 'ABIERTA' ? 'var(--color-success)' : 'var(--color-danger)'
+                    backgroundColor: matchday.status === 'ABIERTA' ? 'rgba(74,222,128,0.2)' : matchday.status === 'PENDIENTE' ? 'rgba(245,158,11,0.2)' : 'rgba(239,68,68,0.2)',
+                    color: matchday.status === 'ABIERTA' ? 'var(--color-success)' : matchday.status === 'PENDIENTE' ? 'var(--color-warning)' : 'var(--color-danger)'
                   }}>
                     {matchday.status}
                   </span>

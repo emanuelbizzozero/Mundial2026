@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../../context/DataContext';
+import { safeStorage } from '../../context/safeStorage';
 
 const AdminEconomics = () => {
   const { economics, setEconomics, addLog } = useData();
@@ -20,7 +21,7 @@ const AdminEconomics = () => {
     };
     
     setEconomics(newEconomics);
-    localStorage.setItem('prode_economics', JSON.stringify(newEconomics));
+    safeStorage.setItem('prode_economics', JSON.stringify(newEconomics));
     addLog('Configuración Económica', 'Se actualizaron los valores económicos del torneo.');
     
     setMessage('Configuración guardada exitosamente.');

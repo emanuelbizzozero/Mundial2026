@@ -23,18 +23,11 @@ const Medal = ({ position }) => {
 };
 
 const AdminRankings = () => {
-  const { users } = useData();
-
-  // Mock scoring calculation for demonstration
-  // In a real app, this would be derived from Results vs User Predictions
-  const getMockPoints = (userId) => {
-    const seed = userId * 7;
-    return (seed % 20) + 5; // Generates points between 5 and 24
-  };
+  const { users, calculateUserPoints } = useData();
 
   const rankedUsers = users
-    .filter(u => u.status === 'ACTIVO')
-    .map(u => ({ ...u, points: getMockPoints(u.id) }))
+    .filter(u => u.status === 'ACTIVO' && u.role !== 'admin')
+    .map(u => ({ ...u, points: calculateUserPoints(u.id) }))
     .sort((a, b) => b.points - a.points);
 
   const top3 = rankedUsers.slice(0, 3);
