@@ -39,9 +39,15 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: 'Tu cuenta ha sido bloqueada', status: 'BLOQUEADO' };
       }
       
-      setCurrentUser(user);
-      safeStorage.setItem('prode_user', JSON.stringify(user));
-      return { success: true, user };
+      const mappedUser = {
+        id: user.id, username: user.username, password: user.password, name: user.name,
+        lastName: user.last_name, dni: user.dni, phone: user.phone, email: user.email,
+        status: user.status, role: user.role, approvedBy: user.approved_by, registrationDate: user.registration_date
+      };
+
+      setCurrentUser(mappedUser);
+      safeStorage.setItem('prode_user', JSON.stringify(mappedUser));
+      return { success: true, user: mappedUser };
     } catch (err) {
       return { success: false, message: 'Error de conexión con el servidor' };
     }
