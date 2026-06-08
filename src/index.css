@@ -345,7 +345,7 @@ input:-webkit-autofill:active {
   align-items: flex-start;
 }
 .dashboard-main-column {
-  width: 1500px;
+  width: 1000px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
