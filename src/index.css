@@ -27,7 +27,7 @@
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   
   /* Glassmorphism for cards */
-  --glass-bg: rgba(15, 25, 75, 0.8);
+  --glass-bg: rgba(15, 25, 75, 0.3);
   --glass-border: rgba(255, 255, 255, 0.25);
   --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   --glass-blur: blur(8px);
@@ -417,7 +417,7 @@ input:-webkit-autofill:active {
    ========================================================= */
 
 .match-card-modern {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   overflow: hidden;
@@ -434,7 +434,7 @@ input:-webkit-autofill:active {
 }
 
 .match-card-modern.predicted {
-  background: rgba(16, 185, 129, 0.08);
+  background: rgba(16, 185, 129, 0.15);
   border-color: rgba(16, 185, 129, 0.2);
 }
 
@@ -442,10 +442,10 @@ input:-webkit-autofill:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 15px;
-  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .match-group-badge {
@@ -476,7 +476,7 @@ input:-webkit-autofill:active {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 10px 15px;
 }
 
 .team-side {
@@ -497,12 +497,12 @@ input:-webkit-autofill:active {
 }
 
 .team-flag {
-  font-size: 24px;
+  font-size: 20px;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
 }
 
 .team-name {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   color: #f8fafc;
   letter-spacing: 0.5px;
@@ -511,18 +511,18 @@ input:-webkit-autofill:active {
 .score-inputs {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 0 20px;
+  gap: 10px;
+  padding: 0 10px;
 }
 
 .modern-score-input {
-  width: 45px;
-  height: 50px;
-  background: rgba(0, 0, 0, 0.4);
+  width: 40px;
+  height: 45px;
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   color: #fff;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 900;
   text-align: center;
   outline: none;

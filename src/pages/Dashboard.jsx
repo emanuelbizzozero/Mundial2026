@@ -423,7 +423,7 @@ const Dashboard = () => {
 
             {currentMatchday && matchdayMatches.length > 0 && (
               <>
-              <div className="matches-grid" style={{padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', background: 'rgba(0,0,0,0.2)'}}>
+              <div className="matches-grid" style={{padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(0,0,0,0.1)'}}>
                 {matchdayMatches.map(match => {
                   const predicted = hasPredicted(match.id);
                   return (
