@@ -404,17 +404,7 @@ const Dashboard = () => {
       {/* MAIN SPLIT LAYOUT */}
       <div className="dashboard-split-layout">
         
-        {/* LEFT COLUMN: RANKINGS (NARROW) */}
-        <div className="dashboard-sidebar">
-          <RankingSidebar 
-            totalPozo={totalPozo} 
-            activeUsersCount={activeUsersCount}
-            completedPredictions={matchdayMatches.filter(m => hasPredicted(m.id)).length}
-            totalPredictions={matchdayMatches.length}
-          />
-        </div>
-
-        {/* RIGHT COLUMN: MATCHES (WIDE) */}
+        {/* LEFT COLUMN: MATCHES (WIDE) */}
         <div className="dashboard-main-column">
           <div className="glass-panel" style={{padding: '0', overflow: 'hidden'}}>
             {/* Table Header */}
@@ -498,6 +488,16 @@ const Dashboard = () => {
               </div>
             )}
           </div>
+        </div>
+
+        {/* RIGHT COLUMN: RANKINGS (NARROW) */}
+        <div className="dashboard-sidebar">
+          <RankingSidebar 
+            totalPozo={totalPozo} 
+            activeUsersCount={activeUsersCount}
+            completedPredictions={matchdayMatches.filter(m => hasPredicted(m.id)).length}
+            totalPredictions={matchdayMatches.length}
+          />
         </div>
       </div>
 
