@@ -626,9 +626,14 @@ input:-webkit-autofill:active {
   gap: 20px;
 }
 
-.premium-trophy {
-  font-size: 60px;
-  filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.5));
+.premium-trophy-img {
+  height: 90px;
+  width: auto;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.3));
 }
 
 .premium-titles {

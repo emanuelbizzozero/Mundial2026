@@ -298,7 +298,7 @@ const Dashboard = () => {
       {/* PREMIUM NAVBAR */}
       <header className="premium-navbar no-print">
         <div className="premium-navbar-left">
-          <div className="premium-trophy">🏆</div>
+          <img src="/trophy.png" alt="Copa del Mundo" className="premium-trophy-img" />
           <div className="premium-titles">
             <h1 className="premium-title">PRODE MUNDIAL</h1>
             <h2 className="premium-subtitle">2026</h2>
