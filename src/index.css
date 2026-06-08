@@ -338,6 +338,33 @@ input:-webkit-autofill:active {
   }
 }
 
+/* Dashboard Split Layout */
+.dashboard-split-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.dashboard-main-column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.dashboard-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .dashboard-split-layout {
+    flex-direction: column;
+  }
+  .dashboard-sidebar {
+    width: 100%;
+  }
+}
+
 @media (max-width: 580px) {
   .responsive-title-row {
     flex-direction: column;

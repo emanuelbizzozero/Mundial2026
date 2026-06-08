@@ -4,6 +4,7 @@ import { useData } from '../context/DataContext';
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import { getFlag } from '../utils/flags';
+import RankingSidebar from '../components/RankingSidebar';
 
 const Dashboard = () => {
   const { currentUser, logout } = useAuth();
@@ -400,29 +401,26 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* MATCHES + RANKING BUTTON */}
-      <div className="glass-panel" style={{padding: '15px'}}>
-        <div className="responsive-title-row">
-          <h2 style={{fontSize: '18px', margin: 0}}>
-            {currentMatchday ? `📅 Fecha ${currentMatchday.number} — ${matchdayMatches.length} partidos` : 'No hay fechas activas'}
-          </h2>
-          <div style={{display: 'flex', gap: '10px'}}>
-            <button onClick={() => navigate('/rankings')} style={styles.rankingBtn}>
-              🏆 Rankings
-            </button>
-            <button onClick={() => navigate('/resultados')} style={styles.resultsBtn}>
-              📊 Resultados
-            </button>
+      {/* MAIN SPLIT LAYOUT */}
+      <div className="dashboard-split-layout">
+        
+        {/* LEFT COLUMN: MATCHES */}
+        <div className="dashboard-main-column">
+          <div className="glass-panel" style={{padding: '15px', marginBottom: '15px'}}>
+            <div className="responsive-title-row">
+              <h2 style={{fontSize: '18px', margin: 0}}>
+                {currentMatchday ? `📅 Fecha ${currentMatchday.number} — ${matchdayMatches.length} partidos` : 'No hay fechas activas'}
+              </h2>
+            </div>
           </div>
-        </div>
 
-        {!currentMatchday && (
-          <p style={{color: 'var(--color-text-muted)'}}>El administrador aun no ha habilitado ninguna fecha.</p>
-        )}
+          {!currentMatchday && (
+            <p style={{color: 'var(--color-text-muted)'}}>El administrador aun no ha habilitado ninguna fecha.</p>
+          )}
 
-        {/* COMPACT GRID: 2 columns */}
-        <div className="responsive-matches-grid">
-              {matchdayMatches.map(match => (
+          {/* VERTICAL LIST (Was compact grid) */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                {matchdayMatches.map(match => (
                 <div key={match.id} style={styles.matchCard}>
                   <div style={styles.matchMeta}>
                     <span style={styles.groupTag}>{match.group}</span>
@@ -465,6 +463,12 @@ const Dashboard = () => {
           </div>
         )}
 
+        </div>
+
+        {/* RIGHT COLUMN: SIDEBAR */}
+        <div className="dashboard-sidebar">
+          <RankingSidebar />
+        </div>
       </div>
 
       {/* CONFIRM MODAL */}
