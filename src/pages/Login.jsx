@@ -90,16 +90,12 @@ const Login = () => {
           </div>
           
           <div style={styles.forgotPassword}>
-            <Link to="/forgot-password" style={{fontSize: '14px', color: 'var(--color-text-muted)', textDecoration: 'none'}}>¿Olvidé mi contraseña?</Link>
+            <Link to="/forgot-password" style={{fontSize: '14px', color: 'var(--color-text-muted)', textDecoration: 'none'}}>¿Olvidaste tu contraseña?</Link>
           </div>
           
           <button type="submit" className="btn-sporty">Ingresar</button>
           
-          <div style={styles.divider}>
-            <span>o</span>
-          </div>
-          
-          <Link to="/register" style={{textDecoration: 'none'}}>
+          <Link to="/register" style={{textDecoration: 'none', marginTop: '10px'}}>
             <button type="button" className="btn-sporty-outline">Registrarse</button>
           </Link>
         </form>
