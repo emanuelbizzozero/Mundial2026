@@ -111,7 +111,7 @@ const UserRankingsPage = () => {
               color: md.status === 'ABIERTA' ? 'var(--color-success)' : 'var(--color-danger)',
             }}>{md.status}</span>
           </button>
-          {expandedSection === `fecha-${md.id}` && renderRankingList('matchday')}
+          {expandedSection === `fecha-${md.id}` && renderRankingList(`fecha-${md.id}`)}
         </div>
       ))}
     </div>
