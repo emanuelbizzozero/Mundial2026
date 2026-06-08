@@ -428,9 +428,9 @@ const Dashboard = () => {
         <div className="dashboard-main-column">
           <div className="glass-panel" style={{padding: '0', overflow: 'hidden'}}>
             {/* Table Header */}
-            <div style={{padding: '15px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <h2 style={{fontSize: '16px', margin: 0, fontWeight: '900', letterSpacing: '0.5px'}}>
-                ⚽ {currentMatchday ? `FECHA ${currentMatchday.number} — FASE DE GRUPOS` : 'NO HAY FECHAS ACTIVAS'}
+            <div className="premium-table-header">
+              <h2 className="premium-table-title">
+                📅 {currentMatchday ? `FECHA ${currentMatchday.number} — FASE DE GRUPOS` : 'NO HAY FECHAS ACTIVAS'}
               </h2>
               <button onClick={() => navigate('/resultados')} style={styles.resultsBtn}>
                 📊 Resultados ↗
@@ -443,8 +443,8 @@ const Dashboard = () => {
 
             {currentMatchday && matchdayMatches.length > 0 && (
               <>
-              <div className="glass-panel matches-container-premium" style={{padding: '15px', background: 'rgba(10, 15, 30, 0.7)', border: '1px solid rgba(56, 189, 248, 0.3)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', borderRadius: '16px'}}>
-                <div className="matches-grid" style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+              <div className="glass-panel matches-container-premium" style={{padding: '0', overflow: 'hidden', background: 'rgba(10, 15, 30, 0.7)', border: '1px solid rgba(56, 189, 248, 0.3)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', borderRadius: '16px'}}>
+                <div className="matches-grid" style={{padding: '15px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                   {matchdayMatches.map(match => {
                     const predicted = hasPredicted(match.id);
                     return (
