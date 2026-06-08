@@ -7,7 +7,7 @@ const UserRankingsPage = () => {
   const navigate = useNavigate();
   const { currentUser, logout } = useAuth();
   const { users, matchdays, calculateUserPoints } = useData();
-  const [expandedSection, setExpandedSection] = useState('general');
+  const [expandedSection, setExpandedSection] = useState(null);
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
@@ -89,17 +89,13 @@ const UserRankingsPage = () => {
         <button onClick={logout} className="btn-sporty-outline" style={{width: 'auto', padding: '8px 16px', fontSize: '13px'}}>Salir</button>
       </header>
 
-      {/* RANKING GENERAL */}
-      <div style={styles.accordionItem}>
-        <button onClick={() => toggleSection('general')} style={styles.accordionHeader}>
-          <div style={styles.headerLeft}>
-            <span style={styles.chevron}>{expandedSection === 'general' ? '▼' : '▶'}</span>
-            <span style={styles.headerTitle}>🏆 Ranking General</span>
-          </div>
-          <span style={styles.headerSub}>Acumulado de todas las fechas</span>
-        </button>
-        {expandedSection === 'general' && renderRankingList('general')}
+      {/* RANKING GENERAL (Fijo) */}
+      <div style={{marginBottom: '30px'}}>
+        <h2 style={{fontSize: '18px', color: 'var(--color-secondary)', marginBottom: '15px'}}>🏆 Ranking General</h2>
+        {renderRankingList('general')}
       </div>
+
+      <h3 style={{fontSize: '16px', color: 'var(--color-text-muted)', marginBottom: '10px', marginTop: '20px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '10px'}}>Resultados por Fecha</h3>
 
       {/* RANKING POR FECHA */}
       {matchdays.map(md => (
