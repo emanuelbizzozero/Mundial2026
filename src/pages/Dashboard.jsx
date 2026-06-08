@@ -423,63 +423,52 @@ const Dashboard = () => {
 
             {currentMatchday && matchdayMatches.length > 0 && (
               <>
-                {/* Column Headers */}
-                <div style={styles.tableHeaderRow}>
-                  <span style={{...styles.tableCol, width: '90px', textAlign: 'left'}}>FECHA</span>
-                  <span style={{...styles.tableCol, width: '90px', textAlign: 'center'}}>GRUPO</span>
-                  <span style={{...styles.tableCol, width: '75px', textAlign: 'center'}}>HORA</span>
-                  <span style={{...styles.tableCol, width: '150px', textAlign: 'center'}}>ESTADIO</span>
-                  <span style={{...styles.tableCol, flex: 1, textAlign: 'center'}}>PARTIDOS</span>
-                </div>
-
-                {/* Match Rows */}
+              <div className="matches-grid" style={{padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', background: 'rgba(0,0,0,0.2)'}}>
                 {matchdayMatches.map(match => {
                   const predicted = hasPredicted(match.id);
                   return (
-                    <div key={match.id} style={{
-                      ...styles.tableRow,
-                      background: predicted ? 'rgba(74,222,128,0.05)' : 'transparent',
-                    }}>
-                      <span style={{...styles.tableColData, width: '90px', textAlign: 'left', fontSize: '11px', color: '#aaa'}}>
-                        {match.date.slice(5).replace('-', '/')}
-                      </span>
-                      <span style={{width: '90px', textAlign: 'center'}}>
-                        <span style={styles.groupBadge}>{match.group}</span>
-                      </span>
-                      <span style={{...styles.tableColData, width: '75px', textAlign: 'center', fontSize: '11px', color: '#aaa'}}>
-                        {match.time} HS
-                      </span>
-                      <span style={{...styles.tableColData, width: '150px', textAlign: 'center', fontSize: '11px', color: '#aaa', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
-                        {match.stadium}
-                      </span>
-                      <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
-                        <span style={{...styles.teamName, textAlign: 'right'}}>
-                          <span style={{marginRight: '6px'}}>{getFlag(match.local)}</span>
-                          {match.local}
-                        </span>
-                        <input 
-                          type="number" min="0"
-                          style={styles.scoreInput}
-                          value={userInputs[match.id]?.local ?? ''}
-                          onChange={(e) => handleInputChange(match.id, 'local', e.target.value)}
-                          disabled={match.status !== 'PROXIMO' || predicted}
-                        />
-                        <span style={{fontWeight: '900', color: 'rgba(255,255,255,0.3)', fontSize: '12px'}}>VS</span>
-                        <input 
-                          type="number" min="0"
-                          style={styles.scoreInput}
-                          value={userInputs[match.id]?.visitante ?? ''}
-                          onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
-                          disabled={match.status !== 'PROXIMO' || predicted}
-                        />
-                        <span style={{...styles.teamName, textAlign: 'left'}}>
-                          <span style={{marginRight: '6px'}}>{getFlag(match.visitante)}</span>
-                          {match.visitante}
-                        </span>
+                    <div key={match.id} className={`match-card-modern ${predicted ? 'predicted' : ''}`}>
+                      <div className="match-card-header">
+                        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                          <span className="match-group-badge">{match.group}</span>
+                          <span className="match-meta-info">📅 {match.date.slice(5).replace('-', '/')} • ⏰ {match.time} HS</span>
+                        </div>
+                        <span className="match-stadium-info">📍 {match.stadium}</span>
+                      </div>
+                      
+                      <div className="match-card-body">
+                        <div className="team-side local">
+                          <span className="team-flag">{getFlag(match.local)}</span>
+                          <span className="team-name">{match.local}</span>
+                        </div>
+                        
+                        <div className="score-inputs">
+                          <input 
+                            type="number" min="0"
+                            className="modern-score-input"
+                            value={userInputs[match.id]?.local ?? ''}
+                            onChange={(e) => handleInputChange(match.id, 'local', e.target.value)}
+                            disabled={match.status !== 'PROXIMO' || predicted}
+                          />
+                          <span className="vs-badge">VS</span>
+                          <input 
+                            type="number" min="0"
+                            className="modern-score-input"
+                            value={userInputs[match.id]?.visitante ?? ''}
+                            onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
+                            disabled={match.status !== 'PROXIMO' || predicted}
+                          />
+                        </div>
+                        
+                        <div className="team-side visitante">
+                          <span className="team-name">{match.visitante}</span>
+                          <span className="team-flag">{getFlag(match.visitante)}</span>
+                        </div>
                       </div>
                     </div>
                   );
                 })}
+              </div>
               </>
             )}
 

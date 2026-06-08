@@ -409,3 +409,156 @@ input:-webkit-autofill:active {
     font-size: 12px !important;
   }
 }
+
+/* =========================================================
+   MODERN MATCH CARDS (NEON / GLASSMORPHISM)
+   ========================================================= */
+
+.match-card-modern {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.match-card-modern:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+  transform: translateY(-2px);
+}
+
+.match-card-modern.predicted {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.match-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 11px;
+}
+
+.match-group-badge {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.match-meta-info {
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.match-stadium-info {
+  color: #94a3b8;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.match-card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+}
+
+.team-side {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.team-side.local {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.team-side.visitante {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.team-flag {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+
+.team-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.5px;
+}
+
+.score-inputs {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 20px;
+}
+
+.modern-score-input {
+  width: 45px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.modern-score-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.3), inset 0 2px 4px rgba(0,0,0,0.5);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.modern-score-input:disabled {
+  background: transparent;
+  border-color: transparent;
+  color: #10b981;
+  box-shadow: none;
+}
+
+.vs-badge {
+  font-size: 13px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 600px) {
+  .match-card-body {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .team-side {
+    width: 100%;
+    justify-content: center !important;
+  }
+  .match-card-header {
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+  }
+}
