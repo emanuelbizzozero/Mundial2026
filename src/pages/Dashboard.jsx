@@ -404,75 +404,100 @@ const Dashboard = () => {
       {/* MAIN SPLIT LAYOUT */}
       <div className="dashboard-split-layout">
         
-        {/* LEFT COLUMN: MATCHES */}
+        {/* LEFT COLUMN: MATCHES (WIDE) */}
         <div className="dashboard-main-column">
-          <div className="glass-panel" style={{padding: '15px', marginBottom: '15px'}}>
-            <div className="responsive-title-row">
-              <h2 style={{fontSize: '18px', margin: 0}}>
-                {currentMatchday ? `📅 Fecha ${currentMatchday.number} — ${matchdayMatches.length} partidos` : 'No hay fechas activas'}
+          <div className="glass-panel" style={{padding: '0', overflow: 'hidden'}}>
+            {/* Table Header */}
+            <div style={{padding: '15px 20px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <h2 style={{fontSize: '16px', margin: 0, fontWeight: '900', letterSpacing: '0.5px'}}>
+                ⚽ {currentMatchday ? `FECHA ${currentMatchday.number} — FASE DE GRUPOS` : 'NO HAY FECHAS ACTIVAS'}
               </h2>
-              <div style={{display: 'flex', gap: '10px'}}>
-                <button onClick={() => navigate('/resultados')} style={styles.resultsBtn}>
-                  📊 Resultados ↗
+              <button onClick={() => navigate('/resultados')} style={styles.resultsBtn}>
+                📊 Resultados ↗
+              </button>
+            </div>
+
+            {!currentMatchday && (
+              <p style={{color: 'var(--color-text-muted)', padding: '20px'}}>El administrador aun no ha habilitado ninguna fecha.</p>
+            )}
+
+            {currentMatchday && matchdayMatches.length > 0 && (
+              <>
+                {/* Column Headers */}
+                <div style={styles.tableHeaderRow}>
+                  <span style={{...styles.tableCol, width: '90px', textAlign: 'left'}}>FECHA</span>
+                  <span style={{...styles.tableCol, width: '90px', textAlign: 'center'}}>GRUPO</span>
+                  <span style={{...styles.tableCol, width: '75px', textAlign: 'center'}}>HORA</span>
+                  <span style={{...styles.tableCol, flex: 1, textAlign: 'center'}}>PARTIDOS</span>
+                </div>
+
+                {/* Match Rows */}
+                {matchdayMatches.map(match => {
+                  const predicted = hasPredicted(match.id);
+                  return (
+                    <div key={match.id} style={{
+                      ...styles.tableRow,
+                      background: predicted ? 'rgba(74,222,128,0.05)' : 'transparent',
+                    }}>
+                      <span style={{...styles.tableColData, width: '90px', textAlign: 'left', fontSize: '11px', color: '#aaa'}}>
+                        {match.date.slice(5).replace('-', '/')}
+                      </span>
+                      <span style={{width: '90px', textAlign: 'center'}}>
+                        <span style={styles.groupBadge}>{match.group}</span>
+                      </span>
+                      <span style={{...styles.tableColData, width: '75px', textAlign: 'center', fontSize: '11px', color: '#aaa'}}>
+                        {match.time} HS
+                      </span>
+                      <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
+                        <span style={{...styles.teamName, textAlign: 'right'}}>
+                          <span style={{marginRight: '6px'}}>{getFlag(match.local)}</span>
+                          {match.local}
+                        </span>
+                        <input 
+                          type="number" min="0"
+                          style={styles.scoreInput}
+                          value={userInputs[match.id]?.local ?? ''}
+                          onChange={(e) => handleInputChange(match.id, 'local', e.target.value)}
+                          disabled={match.status !== 'PROXIMO' || predicted}
+                        />
+                        <span style={{fontWeight: '900', color: 'rgba(255,255,255,0.3)', fontSize: '12px'}}>VS</span>
+                        <input 
+                          type="number" min="0"
+                          style={styles.scoreInput}
+                          value={userInputs[match.id]?.visitante ?? ''}
+                          onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
+                          disabled={match.status !== 'PROXIMO' || predicted}
+                        />
+                        <span style={{...styles.teamName, textAlign: 'left'}}>
+                          <span style={{marginRight: '6px'}}>{getFlag(match.visitante)}</span>
+                          {match.visitante}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Save button inside the table panel */}
+            {currentMatchday && matchdayMatches.length > 0 && !allPredicted && (
+              <div className="no-print" style={{padding: '15px 20px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'flex-end'}}>
+                <button onClick={handleSave} className="btn-sporty" style={{width: 'auto', padding: '10px 30px', backgroundColor: 'var(--color-primary)', color: '#000'}}>
+                  Guardar Pronósticos
                 </button>
               </div>
-            </div>
+            )}
           </div>
-
-          {!currentMatchday && (
-            <p style={{color: 'var(--color-text-muted)'}}>El administrador aun no ha habilitado ninguna fecha.</p>
-          )}
-
-          {/* VERTICAL LIST (Was compact grid) */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                {matchdayMatches.map(match => (
-                <div key={match.id} style={styles.matchCard}>
-                  <div style={styles.matchMeta}>
-                    <span style={styles.groupTag}>{match.group}</span>
-                    <span style={styles.dateMini}>{match.date.slice(5)} {match.time}</span>
-                  </div>
-                  <div style={styles.matchRow}>
-                    <span style={styles.team} className="match-row-team">
-                      <span style={{marginRight: '6px', fontSize: '16px'}}>{getFlag(match.local)}</span> 
-                      {match.local}
-                    </span>
-                    <input 
-                      type="number" min="0"
-                      style={styles.scoreInput}
-                      value={userInputs[match.id]?.local ?? ''}
-                      onChange={(e) => handleInputChange(match.id, 'local', e.target.value)}
-                      disabled={match.status !== 'PROXIMO' || hasPredicted(match.id)}
-                    />
-                    <span style={styles.vs}>-</span>
-                    <input 
-                      type="number" min="0"
-                      style={styles.scoreInput}
-                      value={userInputs[match.id]?.visitante ?? ''}
-                      onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
-                      disabled={match.status !== 'PROXIMO' || hasPredicted(match.id)}
-                    />
-                    <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">
-                      {match.visitante} 
-                      <span style={{marginLeft: '6px', fontSize: '16px'}}>{getFlag(match.visitante)}</span>
-                    </span>
-                  </div>
-                </div>
-              ))}
         </div>
 
-        {currentMatchday && matchdayMatches.length > 0 && !allPredicted && (
-          <div className="no-print" style={{marginTop: '15px', display: 'flex', justifyContent: 'flex-end'}}>
-            <button onClick={handleSave} className="btn-sporty" style={{width: 'auto', padding: '10px 30px', backgroundColor: 'var(--color-primary)', color: '#000'}}>
-              Guardar
-            </button>
-          </div>
-        )}
-
-        </div>
-
-        {/* RIGHT COLUMN: SIDEBAR */}
+        {/* RIGHT COLUMN: SIDEBAR (NARROW) */}
         <div className="dashboard-sidebar">
-          <RankingSidebar />
+          <RankingSidebar 
+            totalPozo={totalPozo} 
+            activeUsersCount={activeUsersCount}
+            completedPredictions={matchdayMatches.filter(m => hasPredicted(m.id)).length}
+            totalPredictions={matchdayMatches.length}
+          />
         </div>
       </div>
 
@@ -598,49 +623,47 @@ const styles = {
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: '8px',
   },
-  matchCard: {
-    background: 'rgba(0,0,0,0.25)',
-    border: '1px solid rgba(255,255,255,0.06)',
-    borderRadius: '8px',
-    padding: '8px 10px',
-  },
-  matchMeta: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: '5px',
-  },
-  groupTag: {
-    background: 'rgba(255,255,255,0.1)',
-    padding: '1px 6px',
-    borderRadius: '3px',
-    fontSize: '10px',
-    fontWeight: 'bold',
-    color: 'rgba(255,255,255,0.7)',
-  },
-  dateMini: {
-    fontSize: '10px',
-    color: 'rgba(255,255,255,0.4)',
-  },
-  matchRow: {
+  tableHeaderRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
-    justifyContent: 'center',
+    padding: '8px 20px',
+    background: 'rgba(255,255,255,0.03)',
+    borderBottom: '1px solid rgba(255,255,255,0.08)',
   },
-  team: {
+  tableCol: {
+    fontSize: '10px',
+    fontWeight: '800',
+    color: 'rgba(255,255,255,0.4)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+  },
+  tableRow: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px 20px',
+    borderBottom: '1px solid rgba(255,255,255,0.04)',
+    transition: 'background 0.2s',
+  },
+  tableColData: {
+    fontWeight: '600',
+  },
+  groupBadge: {
+    background: 'rgba(59,130,246,0.2)',
+    color: '#60A5FA',
+    padding: '2px 8px',
+    borderRadius: '4px',
+    fontSize: '10px',
+    fontWeight: '800',
+    textTransform: 'uppercase',
+  },
+  teamName: {
     fontSize: '13px',
     fontWeight: '700',
     color: '#fff',
     flex: 1,
-    textAlign: 'right',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  },
-  vs: {
-    fontWeight: 'bold',
-    color: 'rgba(255,255,255,0.3)',
-    fontSize: '12px',
   },
   scoreInput: {
     width: '40px',
@@ -653,17 +676,6 @@ const styles = {
     background: 'rgba(0,0,0,0.4)',
     color: '#fff',
     outline: 'none',
-  },
-  rankingBtn: {
-    background: 'rgba(245, 158, 11, 0.2)',
-    border: '1px solid rgba(245, 158, 11, 0.4)',
-    color: '#F59E0B',
-    padding: '8px 16px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontWeight: '700',
-    fontSize: '13px',
-    transition: 'all 0.2s',
   },
   resultsBtn: {
     background: 'rgba(59, 130, 246, 0.2)',
