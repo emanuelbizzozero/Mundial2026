@@ -42,7 +42,7 @@ const Register = () => {
 
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/;
     if (!passwordRegex.test(formData.password)) {
-      setError('La contraseña debe tener al menos una mayúscula, un número y un carácter especial.');
+      setError('debe incluir mayuscula,numeros y caracter especial');
       return;
     }
 
@@ -107,7 +107,7 @@ const Register = () => {
             <div style={styles.row}>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Contraseña</label>
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"
@@ -136,12 +136,12 @@ const Register = () => {
                   </button>
                 </div>
                 <p style={{fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '4px'}}>
-                  Debe incluir 1 mayúscula, 1 número y 1 carácter especial (!@#$...).
+                  debe incluir mayuscula,numeros y caracter especial
                 </p>
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Confirmar Contraseña</label>
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}>
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
                     name="confirmPassword"
@@ -250,6 +250,9 @@ const styles = {
     fontSize: '14px',
     color: 'var(--color-text-muted)',
     fontWeight: '600',
+    textAlign: 'left',
+    width: '100%',
+    display: 'block'
   },
   loginLink: {
     textAlign: 'center',

@@ -60,7 +60,7 @@ const Login = () => {
           
           <div style={styles.inputGroup}>
             <label style={styles.label}>Contraseña</label>
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}>
               <input 
                 type={showPassword ? 'text' : 'password'} 
                 value={password}
@@ -166,6 +166,9 @@ const styles = {
     fontSize: '14px',
     color: 'var(--color-text-muted)',
     fontWeight: '600',
+    textAlign: 'left',
+    width: '100%',
+    display: 'block'
   },
   forgotPassword: {
     textAlign: 'right',
