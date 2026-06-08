@@ -40,6 +40,12 @@ const Register = () => {
       return;
     }
 
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      setError('La contraseña debe tener al menos una mayúscula, un número y un carácter especial.');
+      return;
+    }
+
     if (!formData.phone || formData.phone.trim() === '') {
       setError('El número de contacto es obligatorio');
       return;
@@ -129,6 +135,9 @@ const Register = () => {
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
+                <p style={{fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '4px'}}>
+                  Debe incluir 1 mayúscula, 1 número y 1 carácter especial (!@#$...).
+                </p>
               </div>
               <div style={styles.inputGroup}>
                 <label style={styles.label}>Confirmar Contraseña</label>
