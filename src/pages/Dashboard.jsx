@@ -295,27 +295,47 @@ const Dashboard = () => {
 
   return (
     <div style={styles.container}>
-      {/* HEADER */}
-      <header className="responsive-header no-print">
-        <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
-          <h1 style={styles.greeting}>⚽ Prode Mundial 2026</h1>
-          <span style={styles.userBadge}>{currentUser.name || currentUser.username}</span>
+      {/* TOP USER BAR (Discreet) */}
+      <div className="top-user-bar no-print">
+        <span className="top-username">👤 {currentUser.name || currentUser.username}</span>
+        <button onClick={logout} className="top-logout-btn">Salir 🚪</button>
+      </div>
+
+      {/* PREMIUM NAVBAR */}
+      <header className="premium-navbar no-print">
+        <div className="premium-navbar-left">
+          <div className="premium-trophy">🏆</div>
+          <div className="premium-titles">
+            <h1 className="premium-title">PRODE MUNDIAL</h1>
+            <h2 className="premium-subtitle">2026</h2>
+            <div className="premium-countries">
+              <span className="country-ca">CANADÁ</span> <span style={{color:'#64748b'}}>•</span> <span className="country-us">ESTADOS UNIDOS</span> <span style={{color:'#64748b'}}>•</span> <span className="country-mx">MÉXICO</span>
+            </div>
+          </div>
         </div>
-        <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
-          {/* Stats inline in header */}
-          <div style={styles.statInline}>
-            <span style={styles.statInlineLabel}>Pozo</span>
-            <span style={styles.statInlineValue}>${totalPozo.toLocaleString('es-AR')}</span>
+
+        <div className="premium-navbar-right">
+          <div className="stat-box-premium">
+            <span className="stat-box-icon">💰</span>
+            <div className="stat-box-info">
+              <span className="stat-box-label">POZO</span>
+              <span className="stat-box-value">${totalPozo.toLocaleString('es-AR')}</span>
+            </div>
           </div>
-          <div style={styles.statInline}>
-            <span style={styles.statInlineLabel}>Premio Gral</span>
-            <span style={styles.statInlineValue}>${prizeGeneral.toLocaleString('es-AR')}</span>
+          <div className="stat-box-premium">
+            <span className="stat-box-icon">🏆</span>
+            <div className="stat-box-info">
+              <span className="stat-box-label">PREMIO GRAL.</span>
+              <span className="stat-box-value">${prizeGeneral.toLocaleString('es-AR')}</span>
+            </div>
           </div>
-          <div style={styles.statInline}>
-            <span style={styles.statInlineLabel}>Premio/Fecha</span>
-            <span style={styles.statInlineValue}>${prizePerMatchday.toLocaleString('es-AR', {maximumFractionDigits: 0})}</span>
+          <div className="stat-box-premium">
+            <span className="stat-box-icon">📅</span>
+            <div className="stat-box-info">
+              <span className="stat-box-label">PREMIO / FECHA</span>
+              <span className="stat-box-value">${prizePerMatchday.toLocaleString('es-AR', {maximumFractionDigits: 0})}</span>
+            </div>
           </div>
-          <button onClick={logout} className="btn-sporty-outline" style={{width: 'auto', padding: '8px 16px', fontSize: '13px'}}>Salir</button>
         </div>
       </header>
 
@@ -423,51 +443,53 @@ const Dashboard = () => {
 
             {currentMatchday && matchdayMatches.length > 0 && (
               <>
-              <div className="matches-grid" style={{padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'rgba(0,0,0,0.1)'}}>
-                {matchdayMatches.map(match => {
-                  const predicted = hasPredicted(match.id);
-                  return (
-                    <div key={match.id} className={`match-card-modern ${predicted ? 'predicted' : ''}`}>
-                      <div className="match-card-header">
-                        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                          <span className="match-group-badge">{match.group}</span>
-                          <span className="match-meta-info">📅 {match.date.slice(5).replace('-', '/')} • ⏰ {match.time} HS</span>
-                        </div>
-                        <span className="match-stadium-info">📍 {match.stadium}</span>
-                      </div>
-                      
-                      <div className="match-card-body">
-                        <div className="team-side local">
-                          <span className="team-flag">{getFlag(match.local)}</span>
-                          <span className="team-name">{match.local}</span>
+              <div className="glass-panel matches-container-premium" style={{padding: '15px'}}>
+                <div className="matches-grid" style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                  {matchdayMatches.map(match => {
+                    const predicted = hasPredicted(match.id);
+                    return (
+                      <div key={match.id} className={`match-card-modern ${predicted ? 'predicted' : ''}`}>
+                        <div className="match-card-header">
+                          <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                            <span className="match-group-badge">{match.group}</span>
+                            <span className="match-meta-info">📅 {match.date.slice(5).replace('-', '/')} • ⏰ {match.time} HS</span>
+                          </div>
+                          <span className="match-stadium-info">📍 {match.stadium}</span>
                         </div>
                         
-                        <div className="score-inputs">
-                          <input 
-                            type="number" min="0"
-                            className="modern-score-input"
-                            value={userInputs[match.id]?.local ?? ''}
-                            onChange={(e) => handleInputChange(match.id, 'local', e.target.value)}
-                            disabled={match.status !== 'PROXIMO' || predicted}
-                          />
-                          <span className="vs-badge">VS</span>
-                          <input 
-                            type="number" min="0"
-                            className="modern-score-input"
-                            value={userInputs[match.id]?.visitante ?? ''}
-                            onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
-                            disabled={match.status !== 'PROXIMO' || predicted}
-                          />
-                        </div>
-                        
-                        <div className="team-side visitante">
-                          <span className="team-name">{match.visitante}</span>
-                          <span className="team-flag">{getFlag(match.visitante)}</span>
+                        <div className="match-card-body">
+                          <div className="team-side local">
+                            <span className="team-flag">{getFlag(match.local)}</span>
+                            <span className="team-name">{match.local}</span>
+                          </div>
+                          
+                          <div className="score-inputs">
+                            <input 
+                              type="number" min="0"
+                              className="modern-score-input"
+                              value={userInputs[match.id]?.local ?? ''}
+                              onChange={(e) => handleInputChange(match.id, 'local', e.target.value)}
+                              disabled={match.status !== 'PROXIMO' || predicted}
+                            />
+                            <span className="vs-badge">VS</span>
+                            <input 
+                              type="number" min="0"
+                              className="modern-score-input"
+                              value={userInputs[match.id]?.visitante ?? ''}
+                              onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
+                              disabled={match.status !== 'PROXIMO' || predicted}
+                            />
+                          </div>
+                          
+                          <div className="team-side visitante">
+                            <span className="team-name">{match.visitante}</span>
+                            <span className="team-flag">{getFlag(match.visitante)}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
               </>
             )}
