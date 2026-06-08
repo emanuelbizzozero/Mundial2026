@@ -42,7 +42,7 @@ const Register = () => {
 
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/;
     if (!passwordRegex.test(formData.password)) {
-      setError('debe incluir mayuscula,numeros y caracter especial');
+      setError('La contraseña debe incluir al menos una letra mayúscula, números y un carácter especial.');
       return;
     }
 
@@ -78,8 +78,6 @@ const Register = () => {
         <div style={styles.logoContainer}>
           <h2 style={styles.title}>Registro de Jugador</h2>
         </div>
-        
-        {error && <div style={styles.errorBox}>{error}</div>}
         
         {!showConfirm ? (
           <form onSubmit={handleSubmit} style={styles.form}>
@@ -197,6 +195,27 @@ const Register = () => {
           </div>
         )}
       </div>
+
+      {/* ERROR MODAL */}
+      {error && (
+        <div style={styles.modalOverlay}>
+          <div className="glass-panel" style={{...styles.modalContent, border: '1px solid rgba(56, 189, 248, 0.4)', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 30, 45, 0.95) 100%)'}}>
+            <h3 style={{...styles.modalTitle, color: '#38bdf8'}}>⚠️ Aviso</h3>
+            <p style={styles.modalText}>
+              {error}
+            </p>
+            <div style={styles.modalActions}>
+              <button 
+                onClick={() => setError('')} 
+                className="btn-sporty" 
+                style={{flex: 1, padding: '10px', backgroundColor: '#38bdf8', color: '#000'}}
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -221,15 +240,6 @@ const styles = {
   title: {
     color: 'var(--color-secondary)',
     fontSize: '24px',
-  },
-  errorBox: {
-    backgroundColor: 'rgba(227, 0, 43, 0.1)',
-    border: '1px solid var(--color-danger)',
-    color: 'var(--color-danger)',
-    padding: '10px',
-    borderRadius: '8px',
-    marginBottom: '20px',
-    textAlign: 'center',
   },
   form: {
     display: 'flex',
@@ -271,6 +281,46 @@ const styles = {
     margin: '0 0 15px 0',
     color: '#ccc',
     lineHeight: '1.8'
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+    backdropFilter: 'blur(4px)',
+    padding: '20px',
+  },
+  modalContent: {
+    maxWidth: '450px',
+    width: '100%',
+    padding: '25px',
+    textAlign: 'center',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '16px',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+  },
+  modalTitle: {
+    fontSize: '20px',
+    marginBottom: '15px',
+    color: '#fff',
+    margin: 0,
+  },
+  modalText: {
+    fontSize: '15px',
+    color: '#fff',
+    marginBottom: '8px',
+    marginTop: '15px',
+  },
+  modalActions: {
+    display: 'flex',
+    gap: '12px',
+    marginTop: '20px'
   }
 };
 
