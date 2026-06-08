@@ -401,24 +401,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* CUSTOM BANNER */}
-      <div className="dashboard-hero-banner">
-        <div className="hero-banner-content">
-          <div className="hero-trophy">🏆</div>
-          <div className="hero-text-container">
-            <h1 className="hero-title">
-              PRODE <span className="hero-username">{currentUser.name || currentUser.username}</span>
-            </h1>
-            <h2 className="hero-pozo">
-              POZO TOTAL: <span>${totalPozo.toLocaleString()}</span>
-            </h2>
-            <div className="hero-countries">
-              <span className="country-ca">CANADA</span> • <span className="country-us">ESTADOS UNIDOS</span> • <span className="country-mx">MEXICO</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* MAIN SPLIT LAYOUT */}
       <div className="dashboard-split-layout">
         
