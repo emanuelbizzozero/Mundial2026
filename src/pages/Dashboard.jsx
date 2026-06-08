@@ -518,8 +518,8 @@ const Dashboard = () => {
       {/* ERROR MODAL */}
       {showErrorModal && (
         <div style={styles.modalOverlay}>
-          <div className="glass-panel" style={{...styles.modalContent, border: '1px solid rgba(239, 68, 68, 0.4)', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 20, 20, 0.95) 100%)'}}>
-            <h3 style={{...styles.modalTitle, color: '#ef4444'}}>⚠️ Aviso</h3>
+          <div className="glass-panel" style={{...styles.modalContent, border: '1px solid rgba(56, 189, 248, 0.4)', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 30, 45, 0.95) 100%)'}}>
+            <h3 style={{...styles.modalTitle, color: '#38bdf8'}}>⚠️ Aviso</h3>
             <p style={styles.modalText}>
               {errorModalMsg}
             </p>
@@ -527,7 +527,7 @@ const Dashboard = () => {
               <button 
                 onClick={() => setShowErrorModal(false)} 
                 className="btn-sporty" 
-                style={{flex: 1, padding: '10px', backgroundColor: '#ef4444', color: '#fff'}}
+                style={{flex: 1, padding: '10px', backgroundColor: '#38bdf8', color: '#000'}}
               >
                 Entendido
               </button>

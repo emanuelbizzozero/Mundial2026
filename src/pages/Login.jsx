@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [showPendingModal, setShowPendingModal] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const Login = () => {
       }
     } else {
       if (result.status === 'PENDIENTE') {
-        navigate('/pending');
+        setShowPendingModal(true);
       } else if (result.status === 'BLOQUEADO') {
         navigate('/blocked');
       } else {
@@ -100,6 +101,30 @@ const Login = () => {
           </Link>
         </form>
       </div>
+
+      {/* PENDING MODAL */}
+      {showPendingModal && (
+        <div style={styles.modalOverlay}>
+          <div className="glass-panel" style={{...styles.modalContent, border: '1px solid rgba(56, 189, 248, 0.4)', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 30, 45, 0.95) 100%)'}}>
+            <h3 style={{...styles.modalTitle, color: '#38bdf8'}}>ℹ️ Pendiente de Aprobación</h3>
+            <p style={styles.modalText}>
+              Tu cuenta ha sido registrada correctamente, pero aún está pendiente de aprobación por un administrador.
+            </p>
+            <p style={styles.modalSubtext}>
+              Por favor, aguarda a que validen tu pago o habiliten tu acceso para poder ingresar.
+            </p>
+            <div style={styles.modalActions}>
+              <button 
+                onClick={() => setShowPendingModal(false)} 
+                className="btn-sporty" 
+                style={{flex: 1, padding: '10px', backgroundColor: '#38bdf8', color: '#000'}}
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -176,6 +201,50 @@ const styles = {
     textAlign: 'center',
     color: 'var(--color-text-muted)',
     margin: '10px 0',
+  },
+  modalOverlay: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+    backdropFilter: 'blur(4px)',
+    padding: '20px',
+  },
+  modalContent: {
+    maxWidth: '450px',
+    width: '100%',
+    padding: '25px',
+    textAlign: 'center',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '16px',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+  },
+  modalTitle: {
+    fontSize: '20px',
+    marginBottom: '15px',
+    color: '#fff',
+    margin: 0,
+  },
+  modalText: {
+    fontSize: '15px',
+    color: '#fff',
+    marginBottom: '8px',
+    marginTop: '15px',
+  },
+  modalSubtext: {
+    fontSize: '13px',
+    color: 'rgba(255, 255, 255, 0.6)',
+    marginBottom: '25px',
+  },
+  modalActions: {
+    display: 'flex',
+    gap: '12px',
   }
 };
 
