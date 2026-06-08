@@ -308,7 +308,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="premium-navbar-right">
+        <div className="premium-navbar-center">
           <div className="stat-box-premium">
             <span className="stat-box-icon">💰</span>
             <div className="stat-box-info">
@@ -330,11 +330,11 @@ const Dashboard = () => {
               <span className="stat-box-value">${prizePerMatchday.toLocaleString('es-AR', {maximumFractionDigits: 0})}</span>
             </div>
           </div>
-          
-          <div className="navbar-user-section">
-            <span className="navbar-username">👤 {currentUser.name || currentUser.username}</span>
-            <button onClick={logout} className="navbar-logout-btn">Salir 🚪</button>
-          </div>
+        </div>
+
+        <div className="premium-navbar-user">
+          <span className="navbar-username">👤 {currentUser.name || currentUser.username}</span>
+          <button onClick={logout} className="navbar-logout-btn">Salir 🚪</button>
         </div>
       </header>
 

@@ -668,9 +668,24 @@ input:-webkit-autofill:active {
   letter-spacing: 2px;
 }
 
-.premium-navbar-right {
+.premium-navbar-center {
   display: flex;
   gap: 15px;
+  flex: 1;
+  justify-content: center;
+}
+
+.premium-navbar-user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 15px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .stat-box-premium {
@@ -708,12 +723,12 @@ input:-webkit-autofill:active {
   text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .premium-navbar { flex-direction: column; gap: 20px; align-items: stretch; }
   .premium-navbar-left { justify-content: center; }
-  .premium-navbar-right { flex-wrap: wrap; justify-content: center; }
+  .premium-navbar-center { flex-wrap: wrap; justify-content: center; }
+  .premium-navbar-user { align-items: center; }
   .stat-box-premium { flex: 1; min-width: 140px; justify-content: center; }
-  .top-user-bar { justify-content: center; }
 }
 
 /* =========================================================
@@ -755,16 +770,7 @@ input:-webkit-autofill:active {
    USER SECTION IN NAVBAR & PREMIUM SAVE BTN
    ========================================================= */
 
-.navbar-user-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-  gap: 8px;
-  padding-left: 20px;
-  border-left: 1px solid rgba(56, 189, 248, 0.2);
-  margin-left: 10px;
-}
+
 
 .navbar-username {
   color: #fff;
