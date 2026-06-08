@@ -443,7 +443,7 @@ const Dashboard = () => {
 
             {currentMatchday && matchdayMatches.length > 0 && (
               <>
-              <div className="glass-panel matches-container-premium" style={{padding: '15px'}}>
+              <div className="glass-panel matches-container-premium" style={{padding: '15px', background: 'rgba(10, 15, 30, 0.7)', border: '1px solid rgba(56, 189, 248, 0.3)', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', borderRadius: '16px'}}>
                 <div className="matches-grid" style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
                   {matchdayMatches.map(match => {
                     const predicted = hasPredicted(match.id);
