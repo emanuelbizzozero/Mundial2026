@@ -73,13 +73,14 @@ const AdminResults = () => {
       const mdMatches = getMatchesForMatchday(mdId);
       mdMatches.forEach(m => {
         // En una app real, aqui hariamos fetch('https://api-football...') y validariamos la fecha y hora
-        if (m.status !== 'FINALIZADO') {
+        // SOLO autocompletar si no tiene goles ya cargados manualmente
+        if (m.status !== 'FINALIZADO' && m.scoreLocal === null && m.scoreVisitante === null) {
           const randomLocal = Math.floor(Math.random() * 4);
           const randomVisit = Math.floor(Math.random() * 4);
           updateMatch(m.id, { scoreLocal: randomLocal, scoreVisitante: randomVisit });
         }
       });
-      setSavedMsg('Sincronización completada. Los goles se han cargado automáticamente.');
+      setSavedMsg('Sincronización completada. Se respetaron tus cargas manuales.');
       setTimeout(() => setSavedMsg(''), 6000);
     }, 1500);
   };
