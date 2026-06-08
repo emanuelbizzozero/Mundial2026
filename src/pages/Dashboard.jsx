@@ -330,17 +330,21 @@ const Dashboard = () => {
               onClick={() => setHideWinnerBanner(true)} 
               style={{
                 position: 'absolute', 
-                top: '5px', 
-                right: '10px', 
-                background: 'transparent', 
-                border: 'none', 
-                color: 'rgba(255,255,255,0.6)', 
-                fontSize: '16px', 
+                top: '8px', 
+                right: '12px', 
+                background: 'rgba(0,0,0,0.2)', 
+                border: '1px solid rgba(255,255,255,0.3)', 
+                borderRadius: '12px',
+                color: 'rgba(255,255,255,0.9)', 
+                fontSize: '11px', 
+                padding: '2px 8px',
                 cursor: 'pointer',
-                fontWeight: 'bold'
+                fontWeight: '600',
+                letterSpacing: '0.5px',
+                transition: 'all 0.2s'
               }}
             >
-              ✕
+              Cerrar
             </button>
             <div style={styles.winnerIcon}>🏆</div>
             <div style={styles.winnerContent}>
