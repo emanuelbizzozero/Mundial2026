@@ -38,82 +38,51 @@ const RankingSidebar = ({ totalPozo, activeUsersCount, completedPredictions, tot
         <h3 style={s.sectionTitle}>RANKINGS</h3>
       </div>
 
-      {/* TWO RANKING CARDS SIDE BY SIDE */}
-      <div style={s.rankingRow}>
-        {/* RANKING GENERAL */}
-        <div style={{...s.rankingCard, borderTop: '3px solid #F59E0B'}}>
-          <h4 style={s.rankingCardTitle}>
-            <span style={{color: '#F59E0B'}}>🏆</span> RANKING GENERAL
-          </h4>
-          <div style={s.rankList}>
-            {generalRanked.slice(0, 3).map((user, i) => (
-              <div key={user.id} style={{
-                ...s.rankItem,
-                background: user.id === currentUser?.id ? 'rgba(74,222,128,0.15)' : 'transparent',
-              }}>
-                <span style={{...s.rankPos, color: i < 3 ? '#F59E0B' : '#aaa'}}>{getMedalEmoji(i)}</span>
-                <span style={s.rankName}>{user.name || user.username}</span>
-                <span style={s.rankPts}>{user.points} pts</span>
-              </div>
-            ))}
-          </div>
-          <button onClick={() => navigate('/rankings')} style={s.goBtn}>
-            IR AL RANKING →
-          </button>
+      {/* RANKING GENERAL */}
+      <div style={{...s.rankingCard, borderTop: '3px solid #F59E0B'}}>
+        <h4 style={s.rankingCardTitle}>
+          <span style={{color: '#F59E0B'}}>🏆</span> RANKING GENERAL
+        </h4>
+        <div style={s.rankList}>
+          {generalRanked.slice(0, 8).map((user, i) => (
+            <div key={user.id} style={{
+              ...s.rankItem,
+              background: user.id === currentUser?.id ? 'rgba(74,222,128,0.15)' : 'transparent',
+            }}>
+              <span style={{...s.rankPos, color: i < 3 ? '#F59E0B' : '#aaa'}}>{getMedalEmoji(i)}</span>
+              <span style={s.rankName}>{user.name || user.username}</span>
+              <span style={s.rankPts}>{user.points} pts</span>
+            </div>
+          ))}
         </div>
-
-        {/* RANKING POR FECHA */}
-        <div style={{...s.rankingCard, borderTop: '3px solid #3B82F6'}}>
-          <h4 style={s.rankingCardTitle}>
-            <span style={{color: '#3B82F6'}}>📅</span> RANKING POR FECHA
-          </h4>
-          <div style={s.rankList}>
-            {fechaRanked.slice(0, 3).map((user, i) => (
-              <div key={user.id} style={{
-                ...s.rankItem,
-                background: user.id === currentUser?.id ? 'rgba(74,222,128,0.15)' : 'transparent',
-              }}>
-                <span style={{...s.rankPos, color: i < 3 ? '#3B82F6' : '#aaa'}}>{getMedalEmoji(i)}</span>
-                <span style={s.rankName}>{user.name || user.username}</span>
-                <span style={s.rankPts}>{user.points} pts</span>
-              </div>
-            ))}
-            {fechaRanked.length === 0 && (
-              <p style={{color: '#888', fontSize: '11px', textAlign: 'center', margin: '10px 0'}}>Sin datos aún</p>
-            )}
-          </div>
-          <button onClick={() => navigate('/rankings')} style={{...s.goBtn, background: 'rgba(59,130,246,0.15)', borderColor: 'rgba(59,130,246,0.4)', color: '#3B82F6'}}>
-            IR AL RANKING →
-          </button>
-        </div>
+        <button onClick={() => navigate('/rankings')} style={s.goBtn}>
+          IR AL RANKING →
+        </button>
       </div>
 
-      {/* STAT CARDS 2x2 */}
-      <div style={s.statsGrid}>
-        <div style={{...s.statCard, borderLeft: '3px solid #10B981'}}>
-          <div style={s.statIcon}>👥</div>
-          <div style={s.statLabel}>PARTICIPANTES</div>
-          <div style={s.statValue}>{activeUsersCount}</div>
+      {/* RANKING POR FECHA */}
+      <div style={{...s.rankingCard, borderTop: '3px solid #3B82F6'}}>
+        <h4 style={s.rankingCardTitle}>
+          <span style={{color: '#3B82F6'}}>📅</span> RANKING POR FECHA {activeMd ? activeMd.number : ''}
+        </h4>
+        <div style={s.rankList}>
+          {fechaRanked.slice(0, 8).map((user, i) => (
+            <div key={user.id} style={{
+              ...s.rankItem,
+              background: user.id === currentUser?.id ? 'rgba(74,222,128,0.15)' : 'transparent',
+            }}>
+              <span style={{...s.rankPos, color: i < 3 ? '#3B82F6' : '#aaa'}}>{getMedalEmoji(i)}</span>
+              <span style={s.rankName}>{user.name || user.username}</span>
+              <span style={s.rankPts}>{user.points} pts</span>
+            </div>
+          ))}
+          {fechaRanked.length === 0 && (
+            <p style={{color: '#888', fontSize: '11px', textAlign: 'center', margin: '10px 0'}}>Sin datos aún</p>
+          )}
         </div>
-        <div style={{...s.statCard, borderLeft: '3px solid #F59E0B'}}>
-          <div style={s.statIcon}>💰</div>
-          <div style={s.statLabel}>POZO ACUMULADO</div>
-          <div style={{...s.statValue, color: '#F59E0B'}}>${totalPozo?.toLocaleString('es-AR')}</div>
-        </div>
-        <div style={{...s.statCard, borderLeft: '3px solid #6366F1'}}>
-          <div style={s.statIcon}>📋</div>
-          <div style={s.statLabel}>PRONÓSTICOS REALIZADOS</div>
-          <div style={{...s.statValue, color: '#6366F1'}}>{completedPredictions} / {totalPredictions}</div>
-          <div style={{fontSize: '10px', color: '#aaa', marginTop: '2px'}}>Completados</div>
-        </div>
-        <div style={{...s.statCard, borderLeft: '3px solid #EC4899'}}>
-          <div style={s.statIcon}>🎯</div>
-          <div style={s.statLabel}>TU POSICIÓN ACTUAL</div>
-          <div style={{...s.statValue, color: '#EC4899', fontSize: '28px'}}>
-            {currentUserGeneralRank >= 0 ? `${currentUserGeneralRank + 1}°` : '-'}
-          </div>
-          <button onClick={() => navigate('/rankings')} style={{...s.statLink}}>Ver ranking →</button>
-        </div>
+        <button onClick={() => navigate('/rankings')} style={{...s.goBtn, background: 'rgba(59,130,246,0.15)', borderColor: 'rgba(59,130,246,0.4)', color: '#3B82F6'}}>
+          IR AL RANKING →
+        </button>
       </div>
     </div>
   );
