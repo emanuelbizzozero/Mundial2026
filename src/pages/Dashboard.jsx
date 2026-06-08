@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [filterText, setFilterText] = useState('');
   const [filterGroup, setFilterGroup] = useState('ALL');
   const [finishedMatchdayWinner, setFinishedMatchdayWinner] = useState(null);
+  const [hideWinnerBanner, setHideWinnerBanner] = useState(false);
 
   const hasPredicted = (matchId) => {
     return predictions.some(p => p.matchId === matchId && p.userId === currentUser.id);
@@ -316,7 +317,7 @@ const Dashboard = () => {
       </header>
 
       {/* WINNER BANNER */}
-      {finishedMatchdayWinner && (
+      {finishedMatchdayWinner && !hideWinnerBanner && (
         <>
           <style>{`
             @keyframes pulse-glow {
@@ -324,7 +325,23 @@ const Dashboard = () => {
               100% { box-shadow: 0 4px 25px rgba(245, 158, 11, 0.7); }
             }
           `}</style>
-          <div className="no-print" style={styles.winnerBanner}>
+          <div className="no-print" style={{...styles.winnerBanner, position: 'relative'}}>
+            <button 
+              onClick={() => setHideWinnerBanner(true)} 
+              style={{
+                position: 'absolute', 
+                top: '5px', 
+                right: '10px', 
+                background: 'transparent', 
+                border: 'none', 
+                color: 'rgba(255,255,255,0.6)', 
+                fontSize: '16px', 
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              ✕
+            </button>
             <div style={styles.winnerIcon}>🏆</div>
             <div style={styles.winnerContent}>
               <h3 style={styles.winnerTitle}>¡Ganador{finishedMatchdayWinner.users.length > 1 ? 'es' : ''} de la Fecha {finishedMatchdayWinner.matchday.number}!</h3>
