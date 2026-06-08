@@ -14,9 +14,10 @@ const Dashboard = () => {
   const [currentMatchday, setCurrentMatchday] = useState(null);
   const [matchdayMatches, setMatchdayMatches] = useState([]);
   const [userInputs, setUserInputs] = useState({});
-  const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorModalMsg, setErrorModalMsg] = useState('');
   const [pdfDataUrl, setPdfDataUrl] = useState(null);
   const [finishedMatchdayWinner, setFinishedMatchdayWinner] = useState(null);
   const [hideWinnerBanner, setHideWinnerBanner] = useState(false);
@@ -112,7 +113,7 @@ const Dashboard = () => {
       ...prev,
       [matchId]: { ...prev[matchId], [field]: value }
     }));
-    setErrorMsg('');
+    setShowErrorModal(false);
     setPdfDataUrl(null);
   };
 
@@ -227,7 +228,7 @@ const Dashboard = () => {
 
   const confirmSave = () => {
     setShowConfirmModal(false);
-    setErrorMsg('');
+    setShowErrorModal(false);
     setSuccessMsg('');
     setPdfDataUrl(null);
 
@@ -261,7 +262,8 @@ const Dashboard = () => {
       setSuccessMsg('¡Apuesta guardada y PDF generado!');
     } catch (err) {
       console.error(err);
-      setErrorMsg(`⚠️ Error al procesar apuesta: ${err.message || err}`);
+      setErrorModalMsg(`Error al procesar apuesta: ${err.message || err}`);
+      setShowErrorModal(true);
     }
 
     setTimeout(() => {
@@ -270,7 +272,7 @@ const Dashboard = () => {
   };
 
   const handleSave = () => {
-    setErrorMsg('');
+    setShowErrorModal(false);
     setSuccessMsg('');
     setPdfDataUrl(null);
     let hasEmpty = false;
@@ -284,7 +286,8 @@ const Dashboard = () => {
     }
 
     if (hasEmpty) {
-      setErrorMsg('⚠️ Faltan cargar resultados. Completa todos los partidos antes de guardar.');
+      setErrorModalMsg('Faltan cargar resultados. Completa todos los partidos antes de guardar.');
+      setShowErrorModal(true);
       return;
     }
 
@@ -382,9 +385,6 @@ const Dashboard = () => {
       )}
 
       {/* ALERTS */}
-      {errorMsg && (
-        <div className="no-print" style={styles.alertError}>{errorMsg}</div>
-      )}
       {successMsg && (
         <div className="no-print" style={styles.alertSuccess}>
           <div style={{display: 'flex', flexDirection: 'column', gap: '8px', width: '100%'}}>
@@ -514,6 +514,27 @@ const Dashboard = () => {
           />
         </div>
       </div>
+
+      {/* ERROR MODAL */}
+      {showErrorModal && (
+        <div style={styles.modalOverlay}>
+          <div className="glass-panel" style={{...styles.modalContent, border: '1px solid rgba(239, 68, 68, 0.4)', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 20, 20, 0.95) 100%)'}}>
+            <h3 style={{...styles.modalTitle, color: '#ef4444'}}>⚠️ Aviso</h3>
+            <p style={styles.modalText}>
+              {errorModalMsg}
+            </p>
+            <div style={styles.modalActions}>
+              <button 
+                onClick={() => setShowErrorModal(false)} 
+                className="btn-sporty" 
+                style={{flex: 1, padding: '10px', backgroundColor: '#ef4444', color: '#fff'}}
+              >
+                Entendido
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CONFIRM MODAL */}
       {showConfirmModal && (

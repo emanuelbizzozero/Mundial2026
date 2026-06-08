@@ -75,6 +75,23 @@ export const DataProvider = ({ children }) => {
 
   useEffect(() => {
     fetchAllData();
+
+    // Suscripción en tiempo real a los cambios en la base de datos
+    const channel = supabase.channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public' },
+        (payload) => {
+          console.log('Cambio detectado en la BD (Realtime):', payload);
+          // Refrescar los datos silenciosamente en segundo plano
+          fetchAllData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const addLog = async (action, detail) => {
@@ -124,8 +141,8 @@ export const DataProvider = ({ children }) => {
   };
 
   const updateUserStatus = async (userId, newStatus) => {
-    await supabase.from('users').update({ status: newStatus }).eq('id', userId);
     setUsers(prev => prev.map(u => u.id === userId ? { ...u, status: newStatus } : u));
+    await supabase.from('users').update({ status: newStatus }).eq('id', userId);
   };
 
   const addMatchday = async (matchday) => {
@@ -135,13 +152,13 @@ export const DataProvider = ({ children }) => {
   };
 
   const updateMatchday = async (id, data) => {
-    await supabase.from('matchdays').update({ status: data.status, name: data.name }).eq('id', id);
     setMatchdays(prev => prev.map(m => m.id === id ? { ...m, ...data } : m));
+    await supabase.from('matchdays').update({ status: data.status, name: data.name }).eq('id', id);
   };
 
   const deleteMatchday = async (id) => {
-    await supabase.from('matchdays').delete().eq('id', id);
     setMatchdays(prev => prev.filter(m => m.id !== id));
+    await supabase.from('matchdays').delete().eq('id', id);
   };
 
   const addMatch = async (match) => {
@@ -164,18 +181,19 @@ export const DataProvider = ({ children }) => {
   };
 
   const updateMatch = async (id, data) => {
+    setMatches(prev => prev.map(m => m.id === id ? { ...m, ...data } : m));
+    
     const updatePayload = {};
     if (data.status !== undefined) updatePayload.status = data.status;
     if (data.scoreLocal !== undefined) updatePayload.score_local = data.scoreLocal;
     if (data.scoreVisitante !== undefined) updatePayload.score_visitante = data.scoreVisitante;
 
     await supabase.from('matches').update(updatePayload).eq('id', id);
-    setMatches(prev => prev.map(m => m.id === id ? { ...m, ...data } : m));
   };
 
   const deleteMatch = async (id) => {
-    await supabase.from('matches').delete().eq('id', id);
     setMatches(prev => prev.filter(m => m.id !== id));
+    await supabase.from('matches').delete().eq('id', id);
   };
 
   const savePredictions = async (userId, matchdayId, newPredictions) => {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
+import { getFlag } from '../utils/flags';
 
 const UserResultsPage = () => {
   const navigate = useNavigate();
@@ -105,54 +106,61 @@ const UserResultsPage = () => {
                     <p style={{color: 'var(--color-text-muted)', padding: '15px'}}>No hay partidos en esta fecha.</p>
                   )}
 
-                  <div className="responsive-matches-grid" style={{padding: '15px'}}>
+                  <div className="matches-grid" style={{padding: '15px', display: 'flex', flexDirection: 'column', gap: '8px'}}>
                     {mdMatches.map(match => {
                        const pred = getUserPrediction(match.id);
                        const predResult = getPredictionResult(match, pred);
                        const resultStyle = getResultStyle(predResult);
 
                        return (
-                         <div key={match.id} style={{
-                           ...styles.matchCard,
-                           borderLeft: `3px solid ${resultStyle.color}`,
-                           background: resultStyle.bg,
+                         <div key={match.id} className="match-card-modern" style={{
+                           borderLeft: `4px solid ${resultStyle.color}`,
+                           background: resultStyle.bg !== 'rgba(255,255,255,0.05)' ? resultStyle.bg : undefined
                          }}>
-                           {/* Meta row */}
-                           <div style={styles.matchMeta}>
-                             <span style={styles.groupTag}>{match.group}</span>
-                             <span style={styles.dateMini}>{match.date.slice(5)} {match.time}</span>
-                             <span style={{fontSize: '10px', fontWeight: 'bold', color: resultStyle.color}}>
+                           <div className="match-card-header">
+                             <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                               <span className="match-group-badge">{match.group}</span>
+                               <span className="match-meta-info">📅 {match.date.slice(5).replace('-', '/')} • ⏰ {match.time} HS</span>
+                             </div>
+                             <span style={{fontSize: '11px', fontWeight: 'bold', color: resultStyle.color, background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: '12px'}}>
                                {resultStyle.icon} {resultStyle.label}
                              </span>
                            </div>
-
-                           {/* Official result */}
-                           <div style={styles.matchRow}>
-                             <span style={{...styles.team, textAlign: 'right'}} className="match-row-team">{match.local}</span>
-                             <span style={styles.scoreBig}>
-                               {match.scoreLocal !== null ? match.scoreLocal : '-'}
-                             </span>
-                             <span style={styles.vs}>vs</span>
-                             <span style={styles.scoreBig}>
-                               {match.scoreVisitante !== null ? match.scoreVisitante : '-'}
-                             </span>
-                             <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante}</span>
+                           
+                           <div className="match-card-body">
+                             <div className="team-side local">
+                               <span className="team-flag">{getFlag(match.local)}</span>
+                               <span className="team-name">{match.local}</span>
+                             </div>
+                             
+                             <div className="score-inputs" style={{ flexDirection: 'column', gap: '6px' }}>
+                               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                 <span className="modern-score-input" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '35px', width: '35px', fontSize: '16px' }}>
+                                   {match.scoreLocal !== null ? match.scoreLocal : '-'}
+                                 </span>
+                                 <span className="vs-badge">VS</span>
+                                 <span className="modern-score-input" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '35px', width: '35px', fontSize: '16px' }}>
+                                   {match.scoreVisitante !== null ? match.scoreVisitante : '-'}
+                                 </span>
+                               </div>
+                               {pred ? (
+                                 <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', textAlign: 'center', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '4px' }}>
+                                   Tu pred: <strong style={{ color: '#fff' }}>{pred.predictedLocal} - {pred.predictedVisitante}</strong>
+                                 </div>
+                               ) : (
+                                 <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontStyle: 'italic', textAlign: 'center' }}>
+                                   No apostaste
+                                 </div>
+                               )}
+                             </div>
+                             
+                             <div className="team-side visitante">
+                               <span className="team-name">{match.visitante}</span>
+                               <span className="team-flag">{getFlag(match.visitante)}</span>
+                             </div>
                            </div>
-
-                          {/* User prediction */}
-                          {pred && (
-                            <div style={styles.predRow}>
-                              <span style={styles.predLabel}>Tu prediccion:</span>
-                              <span style={styles.predScore}>{pred.predictedLocal} - {pred.predictedVisitante}</span>
-                            </div>
-                          )}
-                          {!pred && (
-                            <div style={styles.predRow}>
-                              <span style={{...styles.predLabel, fontStyle: 'italic'}}>No apostaste</span>
-                            </div>
-                          )}
-                        </div>
-                      );
+                         </div>
+                       );
                     })}
                   </div>
                 </div>
