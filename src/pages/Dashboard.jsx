@@ -19,6 +19,12 @@ const Dashboard = () => {
   const [filterText, setFilterText] = useState('');
   const [filterGroup, setFilterGroup] = useState('ALL');
 
+  const hasPredicted = (matchId) => {
+    return predictions.some(p => p.matchId === matchId && p.userId === currentUser.id);
+  };
+  
+  const allPredicted = matchdayMatches.length > 0 && matchdayMatches.every(m => hasPredicted(m.id));
+
   // Calculate Economics
   const activeUsersCount = users.filter(u => u.status === 'ACTIVO').length;
   const totalPozo = activeUsersCount * economics.entryFee;
@@ -380,7 +386,7 @@ const Dashboard = () => {
                       style={styles.scoreInput}
                       value={userInputs[match.id]?.local ?? ''}
                       onChange={(e) => handleInputChange(match.id, 'local', e.target.value)}
-                      disabled={match.status !== 'PROXIMO'}
+                      disabled={match.status !== 'PROXIMO' || hasPredicted(match.id)}
                     />
                     <span style={styles.vs}>-</span>
                     <input 
@@ -388,7 +394,7 @@ const Dashboard = () => {
                       style={styles.scoreInput}
                       value={userInputs[match.id]?.visitante ?? ''}
                       onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
-                      disabled={match.status !== 'PROXIMO'}
+                      disabled={match.status !== 'PROXIMO' || hasPredicted(match.id)}
                     />
                     <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante}</span>
                   </div>
@@ -396,7 +402,7 @@ const Dashboard = () => {
               ))}
         </div>
 
-        {currentMatchday && matchdayMatches.length > 0 && (
+        {currentMatchday && matchdayMatches.length > 0 && !allPredicted && (
           <div className="no-print" style={{marginTop: '15px', display: 'flex', justifyContent: 'flex-end'}}>
             <button onClick={handleSave} className="btn-sporty" style={{width: 'auto', padding: '10px 30px', backgroundColor: 'var(--color-primary)', color: '#000'}}>
               Guardar
