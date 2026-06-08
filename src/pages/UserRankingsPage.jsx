@@ -130,9 +130,10 @@ const styles = {
     alignItems: 'center',
     marginBottom: '20px',
     padding: '12px 20px',
-    background: 'rgba(20, 30, 20, 0.6)',
+    background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.4) 0%, rgba(30, 64, 175, 0.4) 100%)',
     borderRadius: '12px',
-    border: '1px solid rgba(255,255,255,0.1)',
+    border: '1px solid rgba(56, 189, 248, 0.3)',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
   },
   backBtn: {
     background: 'rgba(255,255,255,0.1)',
@@ -145,8 +146,8 @@ const styles = {
     fontWeight: '600',
   },
   accordionItem: {
-    background: 'rgba(20, 30, 20, 0.5)',
-    border: '1px solid rgba(255,255,255,0.08)',
+    background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.4) 0%, rgba(30, 64, 175, 0.4) 100%)',
+    border: '1px solid rgba(56, 189, 248, 0.3)',
     borderRadius: '10px',
     overflow: 'hidden',
     marginBottom: '10px',
@@ -187,9 +188,9 @@ const styles = {
     textTransform: 'uppercase',
   },
   rankingBody: {
-    borderTop: '1px solid rgba(255,255,255,0.05)',
+    borderTop: '1px solid rgba(56, 189, 248, 0.3)',
     padding: '15px 20px',
-    background: 'rgba(0,0,0,0.15)',
+    background: 'rgba(0,0,0,0.3)',
   },
   top3Grid: {
     display: 'grid',
@@ -198,13 +199,14 @@ const styles = {
     marginBottom: '15px',
   },
   top3Card: {
-    background: 'rgba(50, 70, 40, 0.5)',
+    background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.4) 0%, rgba(30, 64, 175, 0.4) 100%)',
     borderRadius: '10px',
     padding: '15px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     textAlign: 'center',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
   },
   medalBig: {
     fontSize: '28px',
