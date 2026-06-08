@@ -562,3 +562,100 @@ input:-webkit-autofill:active {
     align-items: flex-start;
   }
 }
+
+/* =========================================================
+   CUSTOM HERO BANNER (PRODE MUNDIAL)
+   ========================================================= */
+
+.dashboard-hero-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  border-radius: 16px;
+  padding: 20px 30px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(56, 189, 248, 0.1);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 4px 4px;
+  z-index: 0;
+}
+
+.hero-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  z-index: 1;
+  width: 100%;
+}
+
+.hero-trophy {
+  font-size: 80px;
+  filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.6));
+  animation: float 3s ease-in-out infinite;
+}
+
+.hero-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: 36px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.hero-username {
+  color: #38bdf8;
+  text-shadow: 0 0 15px rgba(56,189,248,0.8);
+}
+
+.hero-pozo {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 900;
+  color: #facc15;
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px rgba(250,204,21,0.6);
+}
+
+.hero-countries {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #aaa;
+}
+
+.country-ca { color: #f87171; text-shadow: 0 0 8px rgba(248,113,113,0.6); }
+.country-us { color: #60a5fa; text-shadow: 0 0 8px rgba(96,165,250,0.6); }
+.country-mx { color: #4ade80; text-shadow: 0 0 8px rgba(74,222,128,0.6); }
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@media (max-width: 600px) {
+  .hero-banner-content { flex-direction: column; text-align: center; }
+  .hero-title { font-size: 24px; }
+  .hero-pozo { font-size: 20px; }
+  .hero-countries { font-size: 10px; }
+}
