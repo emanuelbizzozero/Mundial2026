@@ -538,7 +538,7 @@ const Dashboard = () => {
 const styles = {
   container: {
     padding: '15px',
-    maxWidth: '1400px',
+    maxWidth: '1500px',
     margin: '0 auto',
   },
   header: {
