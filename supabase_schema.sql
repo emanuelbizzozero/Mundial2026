@@ -1,8 +1,16 @@
--- Supabase Schema for Prode Mundial 2026
+-- Supabase Schema for Prode Mundial 2026 (Migrado a IDs Numéricos)
 
--- 1. Users Table
-CREATE TABLE IF NOT EXISTS public.users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+-- LIMPIEZA DE TABLAS ANTERIORES PARA EVITAR CONFLICTOS
+DROP TABLE IF EXISTS public.audit_logs CASCADE;
+DROP TABLE IF EXISTS public.predictions CASCADE;
+DROP TABLE IF EXISTS public.matches CASCADE;
+DROP TABLE IF EXISTS public.matchdays CASCADE;
+DROP TABLE IF EXISTS public.economics CASCADE;
+DROP TABLE IF EXISTS public.users CASCADE;
+
+-- 1. Users Table (Usando SERIAL para auto-incrementar 1, 2, 3...)
+CREATE TABLE public.users (
+  id SERIAL PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   name TEXT NOT NULL,
@@ -16,13 +24,13 @@ CREATE TABLE IF NOT EXISTS public.users (
   registration_date TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Default Admin User
-INSERT INTO public.users (id, username, password, name, email, status, role)
-VALUES (gen_random_uuid(), 'admin', 'admin123', 'Administrador', 'admin@prodemundial.com', 'ACTIVO', 'admin')
+-- Default Admin User (Obtendrá automáticamente el ID 1)
+INSERT INTO public.users (username, password, name, email, status, role)
+VALUES ('admin', 'admin123', 'Administrador', 'admin@prodemundial.com', 'ACTIVO', 'admin')
 ON CONFLICT (username) DO NOTHING;
 
 -- 2. Economics Table
-CREATE TABLE IF NOT EXISTS public.economics (
+CREATE TABLE public.economics (
   id INT PRIMARY KEY DEFAULT 1,
   entry_fee INT DEFAULT 0,
   total_matchdays INT DEFAULT 0
@@ -31,7 +39,7 @@ CREATE TABLE IF NOT EXISTS public.economics (
 INSERT INTO public.economics (id, entry_fee, total_matchdays) VALUES (1, 15000, 8) ON CONFLICT DO NOTHING;
 
 -- 3. Matchdays Table
-CREATE TABLE IF NOT EXISTS public.matchdays (
+CREATE TABLE public.matchdays (
   id INT PRIMARY KEY,
   number INT NOT NULL,
   status TEXT DEFAULT 'PENDIENTE',
@@ -50,7 +58,7 @@ INSERT INTO public.matchdays (id, number, status, name) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. Matches Table
-CREATE TABLE IF NOT EXISTS public.matches (
+CREATE TABLE public.matches (
   id INT PRIMARY KEY,
   matchday_id INT REFERENCES public.matchdays(id),
   local_team TEXT NOT NULL,
@@ -171,10 +179,10 @@ INSERT INTO public.matches (id, matchday_id, local_team, visitante_team, match_d
 (103, 8, 'Ganador Semi 1', 'Ganador Semi 2', '2026-07-19', '15:00', 'MetLife Stadium', 'Final', 'PROXIMO', NULL, NULL)
 ON CONFLICT (id) DO NOTHING;
 
--- 5. Predictions Table
-CREATE TABLE IF NOT EXISTS public.predictions (
-  id TEXT PRIMARY KEY,
-  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+-- 5. Predictions Table (Usando SERIAL y referencia INT)
+CREATE TABLE public.predictions (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES public.users(id) ON DELETE CASCADE,
   matchday_id INT REFERENCES public.matchdays(id),
   match_id INT REFERENCES public.matches(id),
   predicted_local INT NOT NULL,
@@ -182,10 +190,18 @@ CREATE TABLE IF NOT EXISTS public.predictions (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 6. Audit Logs Table
-CREATE TABLE IF NOT EXISTS public.audit_logs (
-  id TEXT PRIMARY KEY,
+-- 6. Audit Logs Table (Usando SERIAL)
+CREATE TABLE public.audit_logs (
+  id SERIAL PRIMARY KEY,
   log_date TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   action TEXT NOT NULL,
   detail TEXT
 );
+
+-- Disable RLS for all tables so the public web app can access them
+ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.economics DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.matchdays DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.matches DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.predictions DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.audit_logs DISABLE ROW LEVEL SECURITY;

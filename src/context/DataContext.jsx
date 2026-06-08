@@ -79,12 +79,16 @@ export const DataProvider = ({ children }) => {
 
   const addLog = async (action, detail) => {
     const newLog = {
-      id: Date.now().toString(),
       action,
       detail
     };
-    await supabase.from('audit_logs').insert([newLog]);
-    setAuditLogs(prev => [{ ...newLog, date: new Date().toISOString() }, ...prev]);
+    const { data } = await supabase.from('audit_logs').insert([newLog]).select();
+    if (data && data.length > 0) {
+      setAuditLogs(prev => [
+        { id: data[0].id, date: data[0].log_date, action: data[0].action, detail: data[0].detail },
+        ...prev
+      ]);
+    }
   };
 
   const registerUser = async (userData) => {
@@ -125,7 +129,7 @@ export const DataProvider = ({ children }) => {
   };
 
   const addMatchday = async (matchday) => {
-    const newId = Date.now();
+    const newId = matchdays.length > 0 ? Math.max(...matchdays.map(m => m.id)) + 1 : 1;
     await supabase.from('matchdays').insert([{ id: newId, number: matchday.number, status: matchday.status, name: matchday.name }]);
     setMatchdays(prev => [...prev, { ...matchday, id: newId }]);
   };
@@ -141,7 +145,7 @@ export const DataProvider = ({ children }) => {
   };
 
   const addMatch = async (match) => {
-    const newId = Date.now();
+    const newId = matches.length > 0 ? Math.max(...matches.map(m => m.id)) + 1 : 1;
     const insertData = {
       id: newId,
       matchday_id: match.matchdayId,
@@ -181,7 +185,6 @@ export const DataProvider = ({ children }) => {
       .eq('matchday_id', matchdayId);
 
     const inserts = newPredictions.map(p => ({
-      id: Date.now().toString() + Math.random().toString().slice(2, 6),
       user_id: p.userId,
       matchday_id: p.matchdayId,
       match_id: p.matchId,
@@ -190,17 +193,21 @@ export const DataProvider = ({ children }) => {
     }));
 
     if (inserts.length > 0) {
-      await supabase.from('predictions').insert(inserts);
+      const { data } = await supabase.from('predictions').insert(inserts).select();
+      
+      if (data) {
+        setPredictions(prev => {
+          const otherPredictions = prev.filter(p => !(p.userId === userId && p.matchdayId === matchdayId));
+          const newPredsMapped = data.map(ins => ({
+            id: ins.id, userId: ins.user_id, matchdayId: ins.matchday_id, matchId: ins.match_id,
+            predictedLocal: ins.predicted_local, predictedVisitante: ins.predicted_visitante
+          }));
+          return [...otherPredictions, ...newPredsMapped];
+        });
+      }
+    } else {
+      setPredictions(prev => prev.filter(p => !(p.userId === userId && p.matchdayId === matchdayId)));
     }
-    
-    setPredictions(prev => {
-      const otherPredictions = prev.filter(p => !(p.userId === userId && p.matchdayId === matchdayId));
-      const newPredsMapped = inserts.map(ins => ({
-        id: ins.id, userId: ins.user_id, matchdayId: ins.matchday_id, matchId: ins.match_id,
-        predictedLocal: ins.predicted_local, predictedVisitante: ins.predicted_visitante
-      }));
-      return [...otherPredictions, ...newPredsMapped];
-    });
   };
 
   const calculateUserPoints = (userId, matchdayId = null) => {
