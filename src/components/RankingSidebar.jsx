@@ -84,27 +84,6 @@ const RankingSidebar = () => {
         {expandedSection === 'general' && renderRankingList('general')}
       </div>
 
-      <h3 style={{fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '10px', marginTop: '15px', paddingBottom: '5px', borderBottom: '1px solid rgba(255,255,255,0.1)'}}>
-        Resultados por Fecha
-      </h3>
-
-      {/* RANKING POR FECHA */}
-      {matchdays.map(md => (
-        <div key={md.id} style={styles.accordionItem}>
-          <button onClick={() => toggleSection(`fecha-${md.id}`)} style={{...styles.accordionHeader, padding: '10px 15px'}}>
-            <div style={styles.headerLeft}>
-              <span style={styles.chevron}>{expandedSection === `fecha-${md.id}` ? '▼' : '▶'}</span>
-              <span style={{...styles.headerTitle, fontSize: '14px'}}>📅 Fecha {md.number}</span>
-            </div>
-            <span style={{
-              ...styles.statusTag,
-              backgroundColor: md.status === 'ABIERTA' ? 'rgba(74,222,128,0.2)' : 'rgba(239,68,68,0.2)',
-              color: md.status === 'ABIERTA' ? 'var(--color-success)' : 'var(--color-danger)',
-            }}>{md.status}</span>
-          </button>
-          {expandedSection === `fecha-${md.id}` && renderRankingList(`fecha-${md.id}`)}
-        </div>
-      ))}
     </div>
   );
 };
