@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
+import { getFlag } from '../utils/flags';
 
 const Dashboard = () => {
   const { currentUser, logout } = useAuth();
@@ -469,7 +470,7 @@ const Dashboard = () => {
                     <span style={styles.dateMini}>{match.date.slice(5)} {match.time}</span>
                   </div>
                   <div style={styles.matchRow}>
-                    <span style={styles.team} className="match-row-team">{match.local}</span>
+                    <span style={styles.team} className="match-row-team">{getFlag(match.local)} {match.local}</span>
                     <input 
                       type="number" min="0"
                       style={styles.scoreInput}
@@ -485,7 +486,7 @@ const Dashboard = () => {
                       onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
                       disabled={match.status !== 'PROXIMO' || hasPredicted(match.id)}
                     />
-                    <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante}</span>
+                    <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante} {getFlag(match.visitante)}</span>
                   </div>
                 </div>
               ))}
