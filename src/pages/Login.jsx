@@ -90,7 +90,7 @@ const Login = () => {
           </div>
           
           <div style={styles.forgotPassword}>
-            <a href="#" style={{fontSize: '14px', color: 'var(--color-text-muted)'}}>¿Olvidé mi contraseña?</a>
+            <Link to="/forgot-password" style={{fontSize: '14px', color: 'var(--color-text-muted)', textDecoration: 'none'}}>¿Olvidé mi contraseña?</Link>
           </div>
           
           <button type="submit" className="btn-sporty">Ingresar</button>

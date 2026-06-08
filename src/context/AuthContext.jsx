@@ -58,10 +58,39 @@ export const AuthProvider = ({ children }) => {
     safeStorage.removeItem('prode_user');
   };
 
+  const resetPassword = async (username, phone, newPassword) => {
+    try {
+      const { data: user, error: fetchError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('username', username)
+        .eq('phone', phone)
+        .single();
+
+      if (fetchError || !user) {
+        return { success: false, message: 'El usuario o teléfono no coinciden con nuestros registros' };
+      }
+
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ password: newPassword })
+        .eq('id', user.id);
+
+      if (updateError) {
+        return { success: false, message: 'Error al actualizar la contraseña' };
+      }
+
+      return { success: true, message: 'Contraseña actualizada correctamente' };
+    } catch (err) {
+      return { success: false, message: 'Error de conexión con el servidor' };
+    }
+  };
+
   const value = {
     currentUser,
     login,
     logout,
+    resetPassword,
     loading
   };
 

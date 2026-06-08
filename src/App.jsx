@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
 import PendingApproval from './pages/PendingApproval';
 import Blocked from './pages/Blocked';
 import Dashboard from './pages/Dashboard';
@@ -54,6 +55,7 @@ function App() {
         
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         
         <Route path="/pending" element={
           <ProtectedRoute allowedStatuses={['PENDIENTE', 'ACTIVO', 'BLOQUEADO']}>
