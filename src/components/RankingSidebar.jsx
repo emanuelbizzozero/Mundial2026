@@ -27,7 +27,7 @@ const RankingSidebar = () => {
   };
 
   const renderRankingList = (type) => {
-    const ranked = getRankedUsers(type).slice(0, 10); // Show top 10 to keep it compact
+    const ranked = getRankedUsers(type).slice(0, 8); // Mostrar solo el Top 8
     const currentUserRank = getRankedUsers(type).findIndex(u => u.id === currentUser?.id);
 
     return (
