@@ -29,10 +29,13 @@ const Dashboard = () => {
   const allPredicted = matchdayMatches.length > 0 && matchdayMatches.every(m => hasPredicted(m.id));
 
   // Calculate Economics
-  const activeUsersCount = users.filter(u => u.status === 'ACTIVO').length;
-  const totalPozo = activeUsersCount * economics.entryFee;
+  const activeUsersCount = users.filter(u => u.status === 'ACTIVO' && u.role !== 'admin').length;
+  const entryFee = economics ? economics.entry_fee || economics.entryFee || 0 : 0;
+  const totalMatchdays = economics ? economics.total_matchdays || economics.totalMatchdays || 0 : 0;
+  
+  const totalPozo = activeUsersCount * entryFee;
   const prizeGeneral = totalPozo * 0.7;
-  const prizePerMatchday = economics.totalMatchdays > 0 ? (totalPozo * 0.3) / economics.totalMatchdays : 0;
+  const prizePerMatchday = totalMatchdays > 0 ? (totalPozo * 0.3) / totalMatchdays : 0;
 
   useEffect(() => {
     const activeMd = matchdays.find(m => m.status === 'ABIERTA');
@@ -470,7 +473,10 @@ const Dashboard = () => {
                     <span style={styles.dateMini}>{match.date.slice(5)} {match.time}</span>
                   </div>
                   <div style={styles.matchRow}>
-                    <span style={styles.team} className="match-row-team">{getFlag(match.local)} {match.local}</span>
+                    <span style={styles.team} className="match-row-team">
+                      <span style={{marginRight: '6px', fontSize: '16px'}}>{getFlag(match.local)}</span> 
+                      {match.local}
+                    </span>
                     <input 
                       type="number" min="0"
                       style={styles.scoreInput}
@@ -486,7 +492,10 @@ const Dashboard = () => {
                       onChange={(e) => handleInputChange(match.id, 'visitante', e.target.value)}
                       disabled={match.status !== 'PROXIMO' || hasPredicted(match.id)}
                     />
-                    <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">{match.visitante} {getFlag(match.visitante)}</span>
+                    <span style={{...styles.team, textAlign: 'left'}} className="match-row-team">
+                      {match.visitante} 
+                      <span style={{marginLeft: '6px', fontSize: '16px'}}>{getFlag(match.visitante)}</span>
+                    </span>
                   </div>
                 </div>
               ))}
