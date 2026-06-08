@@ -163,6 +163,7 @@ const s = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     textShadow: '0 0 5px rgba(0,0,0,0.8)',
+    textTransform: 'capitalize',
   },
   rankPts: {
     fontWeight: '800',

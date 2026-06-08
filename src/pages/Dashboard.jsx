@@ -22,6 +22,13 @@ const Dashboard = () => {
   const [finishedMatchdayWinner, setFinishedMatchdayWinner] = useState(null);
   const [hideWinnerBanner, setHideWinnerBanner] = useState(false);
 
+  const formatName = (name) => {
+    if (!name) return '';
+    return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+  };
+
+  const displayName = formatName(currentUser.name || currentUser.username || 'Usuario');
+
   const hasPredicted = (matchId) => {
     return predictions.some(p => p.matchId === matchId && p.userId === currentUser.id);
   };
@@ -145,8 +152,7 @@ const Dashboard = () => {
     doc.setFontSize(10);
     doc.setTextColor(200, 200, 200);
     doc.setFont("helvetica", "normal");
-    const name = currentUser.name || currentUser.username || 'Usuario';
-    doc.text(`Participante: ${name}`, 15, 45);
+    doc.text(`Participante: ${displayName}`, 15, 45);
     doc.text(`Fecha de la apuesta: ${dateStr}`, 15, 52);
     doc.text(`Fecha del Prode: ${currentMatchday ? `Fecha ${currentMatchday.number}` : ''}`, 15, 59);
 
@@ -207,7 +213,7 @@ const Dashboard = () => {
     doc.setTextColor(120, 120, 120);
     doc.text("Comprobante oficial generado por Prode Mundial 2026. ¡Buena suerte!", 15, y);
 
-    const filename = `Apuesta_${name.replace(/\s+/g, '_')}_Fecha_${currentMatchday?.number || 'X'}.pdf`;
+    const filename = `Apuesta_${displayName.replace(/\s+/g, '_')}_Fecha_${currentMatchday?.number || 'X'}.pdf`;
 
     // Try automatic download
     try {
@@ -336,7 +342,7 @@ const Dashboard = () => {
         </div>
 
         <div className="premium-navbar-user">
-          <span className="navbar-username">👤 {currentUser.name || currentUser.username}</span>
+          <span className="navbar-username">👤 {displayName}</span>
           <button onClick={logout} className="navbar-logout-btn">Salir 🚪</button>
         </div>
       </header>
@@ -393,7 +399,7 @@ const Dashboard = () => {
               {pdfDataUrl && (
                 <a 
                   href={pdfDataUrl} 
-                  download={`Apuesta_${(currentUser.name || currentUser.username || 'Usuario').replace(/\s+/g, '_')}_Fecha_${currentMatchday?.number || 'X'}.pdf`}
+                  download={`Apuesta_${displayName.replace(/\s+/g, '_')}_Fecha_${currentMatchday?.number || 'X'}.pdf`}
                   className="btn-sporty" 
                   style={{
                     width: 'auto', 
@@ -801,6 +807,7 @@ const styles = {
     fontSize: '22px',
     margin: '0 0 8px 0',
     fontWeight: '900',
+    textTransform: 'capitalize',
     textShadow: '0 2px 4px rgba(0,0,0,0.5)',
   },
   winnerScore: {
