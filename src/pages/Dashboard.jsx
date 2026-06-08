@@ -6,7 +6,7 @@ import { jsPDF } from 'jspdf';
 
 const Dashboard = () => {
   const { currentUser, logout } = useAuth();
-  const { users, economics, matchdays, matches, predictions, savePredictions } = useData();
+  const { users, economics, matchdays, matches, predictions, savePredictions, calculateUserPoints } = useData();
   const navigate = useNavigate();
   
   const [currentMatchday, setCurrentMatchday] = useState(null);
@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [pdfDataUrl, setPdfDataUrl] = useState(null);
   const [filterText, setFilterText] = useState('');
   const [filterGroup, setFilterGroup] = useState('ALL');
+  const [finishedMatchdayWinner, setFinishedMatchdayWinner] = useState(null);
 
   const hasPredicted = (matchId) => {
     return predictions.some(p => p.matchId === matchId && p.userId === currentUser.id);
@@ -57,6 +58,50 @@ const Dashboard = () => {
       setUserInputs(initialInputs);
     }
   }, [matchdays, matches, predictions, currentUser.id]);
+
+  useEffect(() => {
+    let latestFinished = null;
+    const sortedMatchdays = [...matchdays].sort((a, b) => b.number - a.number);
+    
+    for (const md of sortedMatchdays) {
+      const mdMatches = matches.filter(m => m.matchdayId === md.id);
+      if (mdMatches.length > 0) {
+        const allPlayed = mdMatches.every(m => m.scoreLocal !== null && m.scoreVisitante !== null);
+        if (allPlayed) {
+          latestFinished = md;
+          break;
+        }
+      }
+    }
+
+    if (latestFinished) {
+      const activeUsers = users.filter(u => u.status === 'ACTIVO' && u.role !== 'admin');
+      let maxScore = -1;
+      let topUsers = [];
+
+      activeUsers.forEach(u => {
+        const score = calculateUserPoints(u.id, latestFinished.id);
+        if (score > maxScore) {
+          maxScore = score;
+          topUsers = [u];
+        } else if (score === maxScore && score > 0) {
+          topUsers.push(u);
+        }
+      });
+
+      if (maxScore > 0 && topUsers.length > 0) {
+        setFinishedMatchdayWinner({
+          matchday: latestFinished,
+          users: topUsers,
+          score: maxScore
+        });
+      } else {
+        setFinishedMatchdayWinner(null);
+      }
+    } else {
+      setFinishedMatchdayWinner(null);
+    }
+  }, [matchdays, matches, users, predictions, calculateUserPoints]);
 
   const handleInputChange = (matchId, field, value) => {
     setUserInputs(prev => ({
@@ -269,6 +314,29 @@ const Dashboard = () => {
           <button onClick={logout} className="btn-sporty-outline" style={{width: 'auto', padding: '8px 16px', fontSize: '13px'}}>Salir</button>
         </div>
       </header>
+
+      {/* WINNER BANNER */}
+      {finishedMatchdayWinner && (
+        <>
+          <style>{`
+            @keyframes pulse-glow {
+              0% { box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3); }
+              100% { box-shadow: 0 4px 25px rgba(245, 158, 11, 0.7); }
+            }
+          `}</style>
+          <div className="no-print" style={styles.winnerBanner}>
+            <div style={styles.winnerIcon}>🏆</div>
+            <div style={styles.winnerContent}>
+              <h3 style={styles.winnerTitle}>¡Ganador{finishedMatchdayWinner.users.length > 1 ? 'es' : ''} de la Fecha {finishedMatchdayWinner.matchday.number}!</h3>
+              <p style={styles.winnerNames}>
+                {finishedMatchdayWinner.users.map(u => u.name || u.username).join(' - ')}
+              </p>
+              <span style={styles.winnerScore}>Con {finishedMatchdayWinner.score} puntos increíbles</span>
+            </div>
+            <div style={styles.winnerIcon}>🥇</div>
+          </div>
+        </>
+      )}
 
       {/* ALERTS */}
       {errorMsg && (
@@ -655,6 +723,50 @@ const styles = {
   modalActions: {
     display: 'flex',
     gap: '12px',
+  },
+  winnerBanner: {
+    background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.9) 100%)',
+    borderRadius: '12px',
+    padding: '15px 20px',
+    marginBottom: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    animation: 'pulse-glow 2s infinite alternate',
+  },
+  winnerContent: {
+    textAlign: 'center',
+    flex: 1,
+    padding: '0 15px',
+  },
+  winnerIcon: {
+    fontSize: '36px',
+    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+  },
+  winnerTitle: {
+    color: '#fff',
+    fontSize: '16px',
+    margin: '0 0 5px 0',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    fontWeight: '800',
+    textShadow: '0 1px 2px rgba(0,0,0,0.3)',
+  },
+  winnerNames: {
+    color: '#fff',
+    fontSize: '22px',
+    margin: '0 0 8px 0',
+    fontWeight: '900',
+    textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+  },
+  winnerScore: {
+    color: 'rgba(255, 255, 255, 0.95)',
+    fontSize: '14px',
+    fontWeight: '700',
+    background: 'rgba(0, 0, 0, 0.25)',
+    padding: '4px 12px',
+    borderRadius: '20px',
   },
 };
 
