@@ -102,6 +102,12 @@ const AdminMatchdays = () => {
                 </td>
                 <td>
                   <div style={styles.actions}>
+                    {matchday.status !== 'ABIERTA' && (
+                      <button onClick={() => updateMatchday(matchday.id, { ...matchday, status: 'ABIERTA' })} style={{...styles.actionBtn, color: 'var(--color-success)', borderColor: 'var(--color-success)'}}>Abrir</button>
+                    )}
+                    {matchday.status === 'ABIERTA' && (
+                      <button onClick={() => updateMatchday(matchday.id, { ...matchday, status: 'CERRADA' })} style={{...styles.actionBtn, color: 'var(--color-warning)', borderColor: 'var(--color-warning)'}}>Cerrar</button>
+                    )}
                     <button onClick={() => handleEdit(matchday)} style={{...styles.actionBtn, color: 'var(--color-info)', borderColor: 'var(--color-info)'}}>Editar</button>
                     <button onClick={() => deleteMatchday(matchday.id)} style={{...styles.actionBtn, color: 'var(--color-danger)', borderColor: 'var(--color-danger)'}}>Eliminar</button>
                   </div>
