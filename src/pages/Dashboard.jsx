@@ -412,11 +412,8 @@ const Dashboard = () => {
                 {currentMatchday ? `📅 Fecha ${currentMatchday.number} — ${matchdayMatches.length} partidos` : 'No hay fechas activas'}
               </h2>
               <div style={{display: 'flex', gap: '10px'}}>
-                <button onClick={() => navigate('/rankings')} style={styles.rankingBtn}>
-                  🏆 Rankings
-                </button>
                 <button onClick={() => navigate('/resultados')} style={styles.resultsBtn}>
-                  📊 Resultados
+                  📊 Resultados ↗
                 </button>
               </div>
             </div>

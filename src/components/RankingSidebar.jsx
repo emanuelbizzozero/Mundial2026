@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
+import { useNavigate } from 'react-router-dom';
 
 const RankingSidebar = () => {
   const { currentUser } = useAuth();
   const { users, matchdays, calculateUserPoints } = useData();
   const [expandedSection, setExpandedSection] = useState('general');
+  const navigate = useNavigate();
 
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
@@ -66,6 +68,11 @@ const RankingSidebar = () => {
 
   return (
     <div style={styles.sidebar}>
+      {/* HEADER BUTTON AS IN THE DRAWING */}
+      <button onClick={() => navigate('/rankings')} style={styles.fullRankingBtn}>
+        🏆 Ver Ranking Completo ↗
+      </button>
+
       {/* RANKING GENERAL */}
       <div style={styles.accordionItem}>
         <button onClick={() => toggleSection('general')} style={styles.accordionHeader}>
@@ -191,6 +198,20 @@ const styles = {
     fontSize: '12px',
     border: '1px solid rgba(74, 222, 128, 0.2)',
   },
+  fullRankingBtn: {
+    width: '100%',
+    padding: '12px',
+    background: 'rgba(255,255,255,0.05)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    color: '#fff',
+    borderRadius: '10px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '800',
+    textAlign: 'center',
+    transition: 'all 0.2s ease',
+    marginBottom: '5px',
+  }
 };
 
 export default RankingSidebar;
