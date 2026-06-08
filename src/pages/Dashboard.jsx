@@ -428,6 +428,7 @@ const Dashboard = () => {
                   <span style={{...styles.tableCol, width: '90px', textAlign: 'left'}}>FECHA</span>
                   <span style={{...styles.tableCol, width: '90px', textAlign: 'center'}}>GRUPO</span>
                   <span style={{...styles.tableCol, width: '75px', textAlign: 'center'}}>HORA</span>
+                  <span style={{...styles.tableCol, width: '150px', textAlign: 'center'}}>ESTADIO</span>
                   <span style={{...styles.tableCol, flex: 1, textAlign: 'center'}}>PARTIDOS</span>
                 </div>
 
@@ -447,6 +448,9 @@ const Dashboard = () => {
                       </span>
                       <span style={{...styles.tableColData, width: '75px', textAlign: 'center', fontSize: '11px', color: '#aaa'}}>
                         {match.time} HS
+                      </span>
+                      <span style={{...styles.tableColData, width: '150px', textAlign: 'center', fontSize: '11px', color: '#aaa', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                        {match.stadium}
                       </span>
                       <div style={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
                         <span style={{...styles.teamName, textAlign: 'right'}}>
