@@ -123,84 +123,84 @@ const Dashboard = () => {
       doc = new jsPDF();
     }
 
+    // Dark Background for entire A4 page (210 x 297 mm)
+    doc.setFillColor(15, 20, 40); // Dark navy blue background
+    doc.rect(0, 0, 210, 297, 'F');
+
     // Header Color band
     doc.setFillColor(20, 83, 45); // Dark green
-    doc.rect(0, 0, 210, 40, 'F');
+    doc.rect(0, 0, 210, 35, 'F');
 
     // Title
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
-    doc.text("PRODE MUNDIAL 2026", 15, 25);
+    doc.text("PRODE MUNDIAL 2026", 15, 22);
 
     // Metadata
-    doc.setFontSize(12);
-    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(10);
+    doc.setTextColor(200, 200, 200);
     doc.setFont("helvetica", "normal");
     const name = currentUser.name || currentUser.username || 'Usuario';
-    doc.text(`Participante: ${name}`, 15, 52);
-    doc.text(`Fecha de la apuesta: ${dateStr}`, 15, 60);
-    doc.text(`Fecha del Prode: ${currentMatchday ? `Fecha ${currentMatchday.number}` : ''}`, 15, 68);
+    doc.text(`Participante: ${name}`, 15, 45);
+    doc.text(`Fecha de la apuesta: ${dateStr}`, 15, 52);
+    doc.text(`Fecha del Prode: ${currentMatchday ? `Fecha ${currentMatchday.number}` : ''}`, 15, 59);
 
     // Separator line
-    doc.setDrawColor(200, 200, 200);
-    doc.line(15, 75, 195, 75);
+    doc.setDrawColor(80, 80, 80);
+    doc.line(15, 65, 195, 65);
 
     // Predictions Header
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.setTextColor(20, 83, 45);
-    doc.text("Tus Predicciones Guardadas", 15, 87);
+    doc.setFontSize(12);
+    doc.setTextColor(74, 222, 128); // Green light
+    doc.text("Tus Predicciones Guardadas", 15, 73);
 
     // Table headers
-    let y = 98;
+    let y = 80;
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
-    doc.setTextColor(100, 100, 100);
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
     doc.text("Grupo", 15, y);
     doc.text("Partido", 45, y);
     doc.text("Prediccion", 145, y);
     
-    y += 5;
+    y += 4;
     doc.line(15, y, 195, y);
-    y += 10;
+    y += 8;
 
     // Matches
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(10);
     
     predictionsList.forEach((pred) => {
       const match = matchdayMatches.find(m => m.id === pred.matchId);
       if (!match) return;
 
-      if (y > 270) {
-        doc.addPage();
-        y = 20;
-      }
-
+      doc.setTextColor(200, 200, 200);
       doc.text(match.group || 'N/A', 15, y);
+      
+      doc.setTextColor(255, 255, 255);
       const matchText = `${match.local} vs ${match.visitante}`;
       doc.text(matchText, 45, y);
+      
       const predictionText = `${pred.predictedLocal} - ${pred.predictedVisitante}`;
       doc.setFont("helvetica", "bold");
+      doc.setTextColor(74, 222, 128);
       doc.text(predictionText, 145, y);
       doc.setFont("helvetica", "normal");
 
-      y += 9;
+      y += 6.5;
     });
 
     // Separator line
-    y += 5;
-    if (y > 280) {
-      doc.addPage();
-      y = 20;
-    }
+    y += 4;
     doc.line(15, y, 195, y);
-    y += 10;
+    y += 8;
 
     // Footer
-    doc.setFontSize(10);
-    doc.setTextColor(150, 150, 150);
+    doc.setFontSize(8);
+    doc.setTextColor(120, 120, 120);
     doc.text("Comprobante oficial generado por Prode Mundial 2026. ¡Buena suerte!", 15, y);
 
     const filename = `Apuesta_${name.replace(/\s+/g, '_')}_Fecha_${currentMatchday?.number || 'X'}.pdf`;
