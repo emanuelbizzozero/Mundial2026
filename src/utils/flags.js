@@ -46,7 +46,23 @@ const flagDictionary = {
   'Italia': '🇮🇹',
   'Colombia': '🇨🇴',
   'Hungría': '🇭🇺',
-  'Paraguay': '🇵🇾'
+  'Paraguay': '🇵🇾',
+  'Sudáfrica': '🇿🇦',
+  'Haití': '🇭🇹',
+  'Escocia': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'Curazao': '🇨🇼',
+  'Túnez': '🇹🇳',
+  'Cabo Verde': '🇨🇻',
+  'Noruega': '🇳🇴',
+  'Jordania': '🇯🇴',
+  'Uzbekistán': '🇺🇿',
+  'Ghana': '🇬🇭',
+  'Repechaje A': '🌍',
+  'Repechaje B': '🌍',
+  'Repechaje C': '🌍',
+  'Repechaje D': '🌍',
+  'Repechaje Int 1': '🌍',
+  'Repechaje Int 2': '🌍'
 };
 
 export const getFlag = (teamName) => {
