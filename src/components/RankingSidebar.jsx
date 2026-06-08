@@ -47,7 +47,8 @@ const RankingSidebar = ({ totalPozo, activeUsersCount, completedPredictions, tot
           {generalRanked.slice(0, 8).map((user, i) => (
             <div key={user.id} style={{
               ...s.rankItem,
-              background: user.id === currentUser?.id ? 'rgba(74,222,128,0.15)' : 'transparent',
+              background: user.id === currentUser?.id ? 'rgba(74,222,128,0.2)' : 'rgba(0,0,0,0.2)',
+              border: user.id === currentUser?.id ? '1px solid rgba(74,222,128,0.4)' : '1px solid rgba(255,255,255,0.05)'
             }}>
               <span style={{...s.rankPos, color: i < 3 ? '#F59E0B' : '#aaa'}}>{getMedalEmoji(i)}</span>
               <span style={s.rankName}>{user.name || user.username}</span>
@@ -69,7 +70,8 @@ const RankingSidebar = ({ totalPozo, activeUsersCount, completedPredictions, tot
           {fechaRanked.slice(0, 8).map((user, i) => (
             <div key={user.id} style={{
               ...s.rankItem,
-              background: user.id === currentUser?.id ? 'rgba(74,222,128,0.15)' : 'transparent',
+              background: user.id === currentUser?.id ? 'rgba(74,222,128,0.2)' : 'rgba(0,0,0,0.2)',
+              border: user.id === currentUser?.id ? '1px solid rgba(74,222,128,0.4)' : '1px solid rgba(255,255,255,0.05)'
             }}>
               <span style={{...s.rankPos, color: i < 3 ? '#3B82F6' : '#aaa'}}>{getMedalEmoji(i)}</span>
               <span style={s.rankName}>{user.name || user.username}</span>
@@ -154,12 +156,13 @@ const s = {
   },
   rankName: {
     flex: 1,
-    fontWeight: '600',
+    fontWeight: '800',
     color: '#fff',
-    fontSize: '12px',
+    fontSize: '13px',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    textShadow: '0 0 5px rgba(0,0,0,0.8)',
   },
   rankPts: {
     fontWeight: '800',

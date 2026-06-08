@@ -295,12 +295,6 @@ const Dashboard = () => {
 
   return (
     <div style={styles.container}>
-      {/* TOP USER BAR (Discreet) */}
-      <div className="top-user-bar no-print">
-        <span className="top-username">👤 {currentUser.name || currentUser.username}</span>
-        <button onClick={logout} className="top-logout-btn">Salir 🚪</button>
-      </div>
-
       {/* PREMIUM NAVBAR */}
       <header className="premium-navbar no-print">
         <div className="premium-navbar-left">
@@ -335,6 +329,11 @@ const Dashboard = () => {
               <span className="stat-box-label">PREMIO / FECHA</span>
               <span className="stat-box-value">${prizePerMatchday.toLocaleString('es-AR', {maximumFractionDigits: 0})}</span>
             </div>
+          </div>
+          
+          <div className="navbar-user-section">
+            <span className="navbar-username">👤 {currentUser.name || currentUser.username}</span>
+            <button onClick={logout} className="navbar-logout-btn">Salir 🚪</button>
           </div>
         </div>
       </header>
@@ -497,8 +496,8 @@ const Dashboard = () => {
             {/* Save button inside the table panel */}
             {currentMatchday && matchdayMatches.length > 0 && !allPredicted && (
               <div className="no-print" style={{padding: '15px 20px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'flex-end'}}>
-                <button onClick={handleSave} className="btn-sporty" style={{width: 'auto', padding: '10px 30px', backgroundColor: 'var(--color-primary)', color: '#000'}}>
-                  Guardar Pronósticos
+                <button onClick={handleSave} className="premium-save-btn" style={{width: 'auto'}}>
+                  💾 Guardar Pronósticos
                 </button>
               </div>
             )}

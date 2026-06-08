@@ -746,4 +746,70 @@ input:-webkit-autofill:active {
   padding: 0;
 }
 
+/* =========================================================
+   USER SECTION IN NAVBAR & PREMIUM SAVE BTN
+   ========================================================= */
+
+.navbar-user-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(56, 189, 248, 0.2);
+  margin-left: 10px;
+}
+
+.navbar-username {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+
+.navbar-logout-btn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.navbar-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
+  color: #fff;
+}
+
+.premium-save-btn {
+  background: linear-gradient(90deg, #facc15 0%, #d97706 100%);
+  color: #000;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+  transition: all 0.3s ease;
+}
+
+.premium-save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(250, 204, 21, 0.6);
+}
+
+.premium-save-btn:active {
+  transform: translateY(0);
+}
+
 
